@@ -27,29 +27,47 @@ class HackerBooksGroup {
     //MARK: - Properties
     
     var dict : hackerBookswithTags = hackerBookswithTags()
-    var tagsArray : [String]
+    var tagsArray : [String] = [""]
+    
     
    // var tagsGroup : [String] = [""]
     
     init(hbooks books: hackerBooksArray){
         
+        
+        
         for book in books{
             
             let tagsGroup = book.tags?.componentsSeparatedByString(",")
-                
-            
             
             for tag in (tagsGroup)! {
                 
-                
-                dict[tag]?.append(book)
+               
+                if dict.count == 0 {
+                    
+                    dict = [ tag : hackerBooksArray()]
+                    
+                }
                 
                 if !tagsArray.contains(tag){
-                
+                    
                     tagsArray.append(tag)
-                
+                    dict[tag] = [book]
+                    
+                    print(dict)
+                    
+                } else {
+                    
+                    dict[tag]?.append(book)
+                    
+                    
                 }
+            
+                
             }
+            
+            
+            
             
         }
     }
@@ -83,9 +101,14 @@ class HackerBooksGroup {
         }
     
     // identificamos libro por tag
-    func book(atIndex index: Int, forTag tag: Int ){
+    func bookForTable (atIndex index: Int, forTag tag: Int ) -> HackerBook{
         
         // Aquie le pasamos Ints por el indexpath.row y el section y devolvemos un book
+        
+        let books = dict[tagsArray[tag]]
+        let book = books![index]
+        
+        return book
         
     }
     

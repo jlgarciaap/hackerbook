@@ -69,6 +69,26 @@ func parsing(hackerBook json: JSONDictionary?) throws -> HackerBook {
     
 }
 
+//MARK: - Loading local file
+
+func loadFromLocalFile(fileName name: String, bundle: NSBundle = NSBundle.mainBundle()) throws -> JSONArray {
+    
+    
+    if let url = bundle.URLForResource(name), data = NSData(contentsOfURL: url),
+        maybeArray = try? NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.MutableContainers) as? JSONArray, array = maybeArray{
+        
+        
+        return array
+        
+    } else{
+        
+        throw HackerBooksErrors.JSONParsingError
+    }
+    
+    
+    
+}
+
 
 
 

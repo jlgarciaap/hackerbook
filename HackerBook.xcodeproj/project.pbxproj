@@ -18,6 +18,7 @@
 		F49C7CC01D301FC9008C275D /* HackerBookControllerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F49C7CBE1D301FC9008C275D /* HackerBookControllerViewController.xib */; };
 		F4A8AF401D30FB7500D53FB0 /* HackerBooksGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A8AF3F1D30FB7500D53FB0 /* HackerBooksGroup.swift */; };
 		F4A8AF421D310C0100D53FB0 /* HackerBooksTableTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A8AF411D310C0100D53FB0 /* HackerBooksTableTableViewController.swift */; };
+		F4A8AF451D3163FE00D53FB0 /* Foundation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A8AF441D3163FE00D53FB0 /* Foundation.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,6 +35,7 @@
 		F49C7CBE1D301FC9008C275D /* HackerBookControllerViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HackerBookControllerViewController.xib; sourceTree = "<group>"; };
 		F4A8AF3F1D30FB7500D53FB0 /* HackerBooksGroup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HackerBooksGroup.swift; sourceTree = "<group>"; };
 		F4A8AF411D310C0100D53FB0 /* HackerBooksTableTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HackerBooksTableTableViewController.swift; sourceTree = "<group>"; };
+		F4A8AF441D3163FE00D53FB0 /* Foundation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Foundation.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,6 +68,7 @@
 		F49C7C9D1D300F7A008C275D /* HackerBook */ = {
 			isa = PBXGroup;
 			children = (
+				F4A8AF431D3163E900D53FB0 /* Frameworks */,
 				F49C7CB21D3011CC008C275D /* Resources */,
 				F49C7CB11D3011C5008C275D /* Controllers */,
 				F49C7CB01D3011BD008C275D /* Models */,
@@ -104,6 +107,14 @@
 				F49C7CB51D30128E008C275D /* books_readable.json */,
 			);
 			name = Resources;
+			sourceTree = "<group>";
+		};
+		F4A8AF431D3163E900D53FB0 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				F4A8AF441D3163FE00D53FB0 /* Foundation.swift */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -180,6 +191,7 @@
 			files = (
 				F49C7CBF1D301FC9008C275D /* HackerBookControllerViewController.swift in Sources */,
 				F49C7CB41D3011F1008C275D /* HackerBook.swift in Sources */,
+				F4A8AF451D3163FE00D53FB0 /* Foundation.swift in Sources */,
 				F4A8AF401D30FB7500D53FB0 /* HackerBooksGroup.swift in Sources */,
 				F49C7CB81D3014AF008C275D /* Errors.swift in Sources */,
 				F4A8AF421D310C0100D53FB0 /* HackerBooksTableTableViewController.swift in Sources */,

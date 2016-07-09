@@ -21,16 +21,46 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         //    "pdf_url": "https://progit2.s3.amazonaws.com/en/2015-03-06-439c2/progit-en.376.pdf",
         //    "tags": "version control, git",
         //    "title": "Pro Git"
+//        
+//        let urlImageString = "http://hackershelf.com/media/cache/b4/24/b42409de128aa7f1c9abbbfa549914de.jpg"
+//        let urlImage = NSURL(string: urlImageString)
+//        let urlData = NSData(contentsOfURL: urlImage!)
         
-        let urlImageString = "http://hackershelf.com/media/cache/b4/24/b42409de128aa7f1c9abbbfa549914de.jpg"
-        let urlImage = NSURL(string: urlImageString)
-        let urlData = NSData(contentsOfURL: urlImage!)
+        //let model = HackerBook(authors: "Scott Chacon, Ben Straub", image: UIImage(data: urlData!)!, pdfUrl: (NSURL(string: "https://progit2.s3.amazonaws.com/en/2015-03-06-439c2/progit-en.376.pdf"))!, tags: "version control, git", title: "Pro Git")
         
-        let model = HackerBook(authors: "Scott Chacon, Ben Straub", image: UIImage(data: urlData!)!, pdfUrl: (NSURL(string: "https://progit2.s3.amazonaws.com/en/2015-03-06-439c2/progit-en.376.pdf"))!, tags: "version control, git", title: "Pro Git")
+        do{
+            
+        
+        let json = try loadFromLocalFile(fileName: "books_readable.json")
+        
+        var books = [HackerBook]()
+        
+            for dict in json{
+                
+                
+                do{
+                    
+                    let book = try parsing(hackerBook: dict)
+                    books.append(book)
+                    
+                } catch{
+                    
+                    print("Error al procesar JSON \(dict)")
+                    
+                    
+                }
+                
+            }
+            
+            print(books.dynamicType)
+            
+        let model = HackerBooksGroup(hbooks: books)
         
         window = UIWindow(frame: UIScreen.mainScreen().bounds)
         
-        let vc = HackerBookControllerViewController(model: model)
+        //let vc = HackerBookControllerViewController(model: model)
+        
+        let vc = HackerBooksTableTableViewController(model: model)
         
         let nav = UINavigationController(rootViewController: vc)
         
@@ -40,6 +70,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         
         return true
+            
+        } catch {
+            
+            fatalError("Error while loading JSON")
+            
+        }
     }
 
     func applicationWillResignActive(application: UIApplication) {

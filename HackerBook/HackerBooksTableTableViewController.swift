@@ -53,7 +53,9 @@ class HackerBooksTableTableViewController: UITableViewController {
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
+        
         return model.tagsArray.count
+        
     }
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -70,8 +72,23 @@ class HackerBooksTableTableViewController: UITableViewController {
         
         let cellId = "HackerBookCellID"
         
-        let book = model.
+        let book = model.bookForTable(atIndex: indexPath.row, forTag: indexPath.section)
         
+        var cell = tableView.dequeueReusableCellWithIdentifier(cellId)
+        
+        if cell == nil {
+            
+            cell = UITableViewCell(style: .Subtitle, reuseIdentifier: cellId)
+            
+            
+        }
+        
+        cell?.imageView?.image = book.image
+        cell?.textLabel?.text = book.title
+        cell?.detailTextLabel?.text = book.authors
+        
+        
+        return cell! // Como hemos puesto el if cell podemos forzar la apertura
         
     }
     
