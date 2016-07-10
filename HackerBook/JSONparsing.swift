@@ -32,7 +32,7 @@ func parsing (hackerBook json: JSONDictionary) throws -> HackerBook {
         
     }
     
-    guard let pdfUrl = json["pdf_url"] as? String, url = NSURL(string: pdfUrl) else{
+    guard let pdfUrl = json["pdf_url"] as? String, url = NSURL(string: pdfUrl) else {
         
         throw HackerBooksErrors.pdfJSONError
         

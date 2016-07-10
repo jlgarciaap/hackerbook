@@ -13,7 +13,12 @@ class HackerBooksTableTableViewController: UITableViewController {
     
     //MARK: - Properties
     
+
     let model : HackerBooksGroup
+    
+    //Delegado
+    var delegate : HackerBooksControllerDelegate?
+    
     
     //MARK: - Initialization
     
@@ -47,6 +52,27 @@ class HackerBooksTableTableViewController: UITableViewController {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    
+    //MARK: - Table view delegate
+    
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        
+        //Averiguamos el libro
+        let bookSelect = book(forIndexPath: indexPath)
+        
+        //avisamos al delegado del cambio
+        delegate?.hackerBooksViewController(self, didSelectBook: bookSelect)
+        
+        //Lo mismo por notificaciones
+        let nCenter = NSNotificationCenter.defaultCenter()
+        
+        let notif = NSNotification(name: "BookChanged", object: self, userInfo: ["key": bookSelect])
+        
+        nCenter.postNotification(notif)
+        
+        
     }
 
     // MARK: - Table view data source
@@ -92,15 +118,62 @@ class HackerBooksTableTableViewController: UITableViewController {
         
     }
     
+    override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        
+        return model.getTags(forSection: section)
+        
+        
+    }
     
+    //MARK: - Utilities
     
-    
-    
-    
-    
-    
-    
-    
+    func book(forIndexPath indexPath: NSIndexPath) -> HackerBook {
+        
+        return model.bookForTable(atIndex: indexPath.row, forTag: indexPath.section)
+        
+        
+    }
     
 
+
 }
+
+//MARK: - Protocols
+
+
+protocol HackerBooksControllerDelegate {
+
+    
+    func hackerBooksViewController(vc: HackerBooksTableTableViewController, didSelectBook book: HackerBook)
+    
+    
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

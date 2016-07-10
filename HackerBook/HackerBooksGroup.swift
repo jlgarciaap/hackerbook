@@ -6,6 +6,8 @@
 //  Copyright © 2016 styleapps. All rights reserved.
 //
 
+
+
 class HackerBooksGroup {
     
     
@@ -29,8 +31,7 @@ class HackerBooksGroup {
     var dict : hackerBookswithTags = hackerBookswithTags()
     var tagsArray : [String] = [""]
     
-    
-   // var tagsGroup : [String] = [""]
+    //MARK: - Initializators
     
     init(hbooks books: hackerBooksArray){
         
@@ -54,7 +55,7 @@ class HackerBooksGroup {
                     tagsArray.append(tag)
                     dict[tag] = [book]
                     
-                    print(dict)
+                  
                     
                 } else {
                     
@@ -107,12 +108,19 @@ class HackerBooksGroup {
         
         let books = dict[tagsArray[tag]]
         let book = books![index]
-        
+    
         return book
+
+    }
+    
+    func getTags (forSection section: Int) -> String {
+        
+        return tagsArray[section]
+        
         
     }
     
-    
+        
     
     
     }

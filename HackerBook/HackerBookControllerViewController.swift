@@ -24,7 +24,6 @@ class HackerBookControllerViewController: UIViewController {
     
     
     
-    
 
     var model: HackerBook
     
@@ -39,6 +38,21 @@ class HackerBookControllerViewController: UIViewController {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    //MARK: - Actions
+    
+    @IBAction func readPDFButton(sender: AnyObject) {
+        
+        let readVC = HackerPdfViewController(model: model)
+        navigationController?.pushViewController(readVC, animated: true)
+        
+    }
+    
+    
+    @IBAction func favButton(sender: UIBarButtonItem) {
+    }
+    
+
     
     //MARK: - Sync
     func syncModelWithView () {
@@ -71,3 +85,28 @@ class HackerBookControllerViewController: UIViewController {
     
 
 }
+
+//MARK: - Delegate Subscription
+
+extension HackerBookControllerViewController : HackerBooksControllerDelegate {
+    
+    func hackerBooksViewController(vc: HackerBooksTableTableViewController, didSelectBook book: HackerBook) {
+        //Le indicamos que el modelo ahora es lo que le pasamos por paramtro
+        model = book
+        
+        //Sincronizamos vista y model
+        
+        syncModelWithView()
+        
+    }
+    
+ 
+}
+
+
+
+
+
+
+
+

@@ -21,12 +21,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         //    "pdf_url": "https://progit2.s3.amazonaws.com/en/2015-03-06-439c2/progit-en.376.pdf",
         //    "tags": "version control, git",
         //    "title": "Pro Git"
-//        
+////        
 //        let urlImageString = "http://hackershelf.com/media/cache/b4/24/b42409de128aa7f1c9abbbfa549914de.jpg"
 //        let urlImage = NSURL(string: urlImageString)
 //        let urlData = NSData(contentsOfURL: urlImage!)
-        
-        //let model = HackerBook(authors: "Scott Chacon, Ben Straub", image: UIImage(data: urlData!)!, pdfUrl: (NSURL(string: "https://progit2.s3.amazonaws.com/en/2015-03-06-439c2/progit-en.376.pdf"))!, tags: "version control, git", title: "Pro Git")
+//        
+//        let hBook = HackerBook(authors: "Scott Chacon, Ben Straub", image: UIImage(data: urlData!)!, pdfUrl: (NSURL(string: "https://progit2.s3.amazonaws.com/en/2015-03-06-439c2/progit-en.376.pdf"))!, tags: "version control, git", title: "Pro Git")
         
         do{
             
@@ -52,19 +52,39 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 
             }
             
-            print(books.dynamicType)
+          
+       
             
-        let model = HackerBooksGroup(hbooks: books)
+       let model = HackerBooksGroup(hbooks: books)
         
+       // let vc = HackerPdfViewController(model: hBook)
+            
         window = UIWindow(frame: UIScreen.mainScreen().bounds)
         
         //let vc = HackerBookControllerViewController(model: model)
         
         let vc = HackerBooksTableTableViewController(model: model)
         
-        let nav = UINavigationController(rootViewController: vc)
+        let navTable = UINavigationController(rootViewController: vc)
+            
+        //Creamos el elemento que se muestra por defecto cuando estamos en SPlit
+            let bookVC = HackerBookControllerViewController(model: model.bookForTable(atIndex: 0,
+                forTag: 1))
+            
+        //Asignamos el delegado. Es decir le indicamos al HackerBooksTableTableViewController quien es su delegado
+            
+            vc.delegate = bookVC
+            
+        let navBook = UINavigationController(rootViewController: bookVC)
+            
+        //Creamos el SplitView
+            
+            let splitVC = UISplitViewController()
+            splitVC.viewControllers = [navTable, navBook]
+            
+            window = UIWindow(frame: UIScreen.mainScreen().bounds)
         
-        window?.rootViewController = nav
+        window?.rootViewController = splitVC
         
         window?.makeKeyAndVisible()
         
