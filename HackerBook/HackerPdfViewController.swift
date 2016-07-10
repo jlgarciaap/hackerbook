@@ -47,6 +47,10 @@ class HackerPdfViewController: UIViewController, UIWebViewDelegate {
     
 
     override func viewDidLoad() {
+        
+        //Vista por debajo del NavBar
+        self.edgesForExtendedLayout = UIRectEdge.None
+        
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.

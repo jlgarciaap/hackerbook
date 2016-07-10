@@ -53,6 +53,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
             
           
+            
+           print(UIDevice.currentDevice().userInterfaceIdiom.rawValue)
+                
+                //raw value 0 iphonen raw value 1 ipad
+           
        
             
        let model = HackerBooksGroup(hbooks: books)
@@ -73,7 +78,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             
         //Asignamos el delegado. Es decir le indicamos al HackerBooksTableTableViewController quien es su delegado
             
-            vc.delegate = bookVC
+            if UIDevice.currentDevice().userInterfaceIdiom.rawValue == 1{
+            
+                vc.delegate = bookVC
+            }
+            
+            vc.delegate = HackerBooksControllerDelegate
             
         let navBook = UINavigationController(rootViewController: bookVC)
             
