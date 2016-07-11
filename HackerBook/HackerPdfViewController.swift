@@ -96,6 +96,10 @@ class HackerPdfViewController: UIViewController, UIWebViewDelegate {
     
     func obtainNSData(StringUrl urlPdf: NSURL) -> NSData{
         
+        let defaults = NSUserDefaults.standardUserDefaults()
+        
+    
+        
         guard let dataURL : NSData = NSData(contentsOfURL: urlPdf) else {
             
             //Si por lo que sea la url no contiene datos mostramos una alerta

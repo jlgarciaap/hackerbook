@@ -23,26 +23,46 @@ typealias JSONArray = [JSONDictionary]
 
 func parsing (hackerBook json: JSONDictionary) throws -> HackerBook {
     
+    let defaults = NSUserDefaults.standardUserDefaults()
     
     let authors = json["authors"] as? String
+    let title = json["title"] as? String
     
-    guard let imageUrlString = json["image_url"] as? String, imageUrl = NSURL(string: imageUrlString), dataImage = NSData(contentsOfURL: imageUrl), image = UIImage(data: dataImage) else{
+    if (defaults.dataForKey(title!) == nil){
+    
+    guard let imageUrlString = json["image_url"] as? String, imageUrl = NSURL(string: imageUrlString), dataImage = NSData(contentsOfURL: imageUrl) else{
         
+        //image = UIImage(data: dataImage)
         throw HackerBooksErrors.imageJSONError
         
+        }
+    
+        defaults.setObject(dataImage, forKey: title!)
     }
+        
+        let imageData = defaults.dataForKey(title!)
+        
+        let image = UIImage(data: imageData!)
+        
+    
     
     guard let pdfUrl = json["pdf_url"] as? String, url = NSURL(string: pdfUrl) else {
         
         throw HackerBooksErrors.pdfJSONError
         
     }
+    
+    
 
-    let tags = json["tags"] as? String
     
-    if let title = json["title"] as? String{
     
-        return HackerBook(authors: authors, image: image, pdfUrl: url, tags: tags, title: title)
+    if let tags = json["tags"] as? String {
+        
+        
+        
+        
+    
+        return HackerBook(authors: authors, image: image!, pdfUrl: url, tags: tags, title: title)
     
     } else {
         
@@ -78,6 +98,8 @@ func loadFromLocalFile(fileName name: String, bundle: NSBundle = NSBundle.mainBu
         maybeArray = try? NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.MutableContainers) as? JSONArray, array = maybeArray{
         
         
+        
+        
         return array
         
     } else{
@@ -85,6 +107,27 @@ func loadFromLocalFile(fileName name: String, bundle: NSBundle = NSBundle.mainBu
         throw HackerBooksErrors.JSONParsingError
     }
     
+    
+    
+}
+
+//MARK: - Loading save File
+
+func loadFromSaveFile (file name: NSData) throws -> JSONArray {
+    
+   if let maybeArray = try? NSJSONSerialization.JSONObjectWithData(name, options: NSJSONReadingOptions.MutableContainers) as? JSONArray, array = maybeArray{
+        
+        
+        
+        
+        return array
+        
+    } else{
+        
+        throw HackerBooksErrors.JSONParsingError
+    }
+    
+
     
     
 }

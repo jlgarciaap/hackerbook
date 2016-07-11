@@ -21,6 +21,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         //    "pdf_url": "https://progit2.s3.amazonaws.com/en/2015-03-06-439c2/progit-en.376.pdf",
         //    "tags": "version control, git",
         //    "title": "Pro Git"
+        
+        //URL del JSON https://t.co/K9ziV0z3SJ
 ////        
 //        let urlImageString = "http://hackershelf.com/media/cache/b4/24/b42409de128aa7f1c9abbbfa549914de.jpg"
 //        let urlImage = NSURL(string: urlImageString)
@@ -30,12 +32,27 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         do{
             
+            
+            
+            
+            let defaults = NSUserDefaults.standardUserDefaults()
+            
+            if (defaults.dataForKey("JSONFile") == nil){
+            
+            defaults.setObject(NSData(contentsOfURL: NSURL(string: "https://t.co/K9ziV0z3SJ")!), forKey: "JSONFile")
+            
+            }
+            
+             let fileDownload = defaults.dataForKey("JSONFile")
+            
+            
+            
         
-        let json = try loadFromLocalFile(fileName: "books_readable.json")
+        let jsonFile = try loadFromSaveFile(file: fileDownload!)
         
         var books = [HackerBook]()
         
-            for dict in json{
+            for dict in jsonFile{
                 
                 
                 do{
@@ -79,11 +96,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         //Asignamos el delegado. Es decir le indicamos al HackerBooksTableTableViewController quien es su delegado
             
             if UIDevice.currentDevice().userInterfaceIdiom.rawValue == 1{
-            
+            //Si es un IPAD el delegado es HackerBookCOntroller
                 vc.delegate = bookVC
             }
             
-            vc.delegate = HackerBooksControllerDelegate
+            
             
         let navBook = UINavigationController(rootViewController: bookVC)
             
