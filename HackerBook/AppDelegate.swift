@@ -71,10 +71,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             
           
             
-           print(UIDevice.currentDevice().userInterfaceIdiom.rawValue)
-                
-                //raw value 0 iphonen raw value 1 ipad
-           
+          
        
             
        let model = HackerBooksGroup(hbooks: books)

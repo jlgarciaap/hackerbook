@@ -40,7 +40,7 @@ class HackerPdfViewController: UIViewController, UIWebViewDelegate {
         
         actView.startAnimating()
         
-        pdfView.loadData(obtainNSData(StringUrl: model.pdfUrl) , MIMEType: "application/pdf", textEncodingName: "utf-8", baseURL: NSURL())
+        pdfView.loadData(obtainNSData(StringUrl: model.pdfUrl!) , MIMEType: "application/pdf", textEncodingName: "utf-8", baseURL: NSURL())
         
         
     }
@@ -94,13 +94,17 @@ class HackerPdfViewController: UIViewController, UIWebViewDelegate {
 
     //MARK: - Utilities
     
-    func obtainNSData(StringUrl urlPdf: NSURL) -> NSData{
+    func obtainNSData(StringUrl urlPdf: String) -> NSData{
         
         let defaults = NSUserDefaults.standardUserDefaults()
         
+        if (defaults.dataForKey(urlPdf) == nil){
+        
+        let nsUrlCast = NSURL(string: urlPdf)!
     
         
-        guard let dataURL : NSData = NSData(contentsOfURL: urlPdf) else {
+        
+        guard let dataURL : NSData = NSData(contentsOfURL: nsUrlCast) else {
             
             //Si por lo que sea la url no contiene datos mostramos una alerta
             
@@ -113,7 +117,16 @@ class HackerPdfViewController: UIViewController, UIWebViewDelegate {
           return NSData()
         }
         
+        defaults.setObject(dataURL, forKey: urlPdf)
+            
         return dataURL
+            
+        } else {
+            
+            let dataURL = defaults.dataForKey(urlPdf)!
+            
+            return dataURL
+        }
         
     }
     

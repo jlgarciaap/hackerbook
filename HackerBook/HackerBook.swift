@@ -15,14 +15,14 @@ class HackerBook{
     
     let authors: String?
     let image: UIImage
-    let pdfUrl: NSURL
+    let pdfUrl: String?
     let tags: String?
     let title: String?
     
     
     //MARK: - Initialization
     
-    init( authors: String?, image: UIImage, pdfUrl: NSURL, tags: String?, title: String?){
+    init( authors: String?, image: UIImage, pdfUrl: String?, tags: String?, title: String?){
         
         self.authors = authors
         self.image = image

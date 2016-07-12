@@ -38,7 +38,15 @@ class HackerBooksTableTableViewController: UITableViewController {
     
     //MARK: Table View Data Source
     
-  
+    override func viewWillAppear(animated: Bool) {
+        
+        
+        let nCenter = NSNotificationCenter.defaultCenter()
+        
+        nCenter.addObserver(self, selector: #selector(bookAddFav), name: "favChangedOn", object: nil)
+        nCenter.addObserver(self, selector: #selector(bookRemoveFav), name: "favChangedOff", object: nil)
+        
+    }
       
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -63,6 +71,15 @@ class HackerBooksTableTableViewController: UITableViewController {
         //Averiguamos el libro
         let bookSelect = book(forIndexPath: indexPath)
         
+       // print(UIDevice.currentDevice().userInterfaceIdiom.rawValue)
+        
+        //raw value 0 iphone n raw value 1 ipad
+        
+        if (UIDevice.currentDevice().userInterfaceIdiom.rawValue == 0){
+        
+        let bookVC = HackerBookControllerViewController(model: bookSelect)
+        navigationController?.pushViewController(bookVC, animated: true)
+        }
         //avisamos al delegado del cambio
         delegate?.hackerBooksViewController(self, didSelectBook: bookSelect)
         
@@ -126,6 +143,8 @@ class HackerBooksTableTableViewController: UITableViewController {
         
     }
     
+    
+    
     //MARK: - Utilities
     
     func book(forIndexPath indexPath: NSIndexPath) -> HackerBook {
@@ -135,9 +154,110 @@ class HackerBooksTableTableViewController: UITableViewController {
         
     }
     
+    func bookAddFav (notification: NSNotification){
+        
+        
+        let data = notification.userInfo!
+        
+        //Sacamos el libro de la notificacion
+        let book = data["key"]
+    
+        let defaults = NSUserDefaults.standardUserDefaults()
+        
+       
+        
+        //Si no existe el "fav" lo creamos con el primer libro
+        if defaults.dictionaryForKey("fav") == nil {
+            
+            let favSaved = ["Favorites": [book!]]
+            
+            defaults.setObject(favSaved, forKey: "fav")
+            
+            
+        } else {
+            
+            //Sacamos lo que tiene comprobamos y si no existe lo añadimos
+            let bookSavedinFav = defaults.dictionaryForKey("fav")
+            
+            let bookGroup = bookSavedinFav!["Favorites"]
+            
+            var bookExtract = bookGroup![0] as? String
+            
+            if (bookExtract!.containsString(book as! String)){
+                
+                //Si lo contiene no hacemos nada
+                
+            } else {
+            
+            bookExtract = bookExtract! + ",\(book!)"
+            
+            let favSaved = ["Favorites": [bookExtract!]]
 
+            defaults.setObject(favSaved, forKey: "fav")
+            
+            }
+        
+        }
 
+    }
+    
+    
+    func bookRemoveFav (notification: NSNotification){
+        
+        
+        let data = notification.userInfo!
+        
+        //Sacamos el libro de la notificacion
+        let book = data["key"]
+        
+        let defaults = NSUserDefaults.standardUserDefaults()
+        
+        
+        //Si no existe no hacemos nada
+        if defaults.dictionaryForKey("fav") == nil {
+           //no hacer nada
+            
+            
+        } else {
+            
+            //Sacamos lo que tiene comprobamos y si existe lo borramos
+            let bookSavedinFav = defaults.dictionaryForKey("fav")
+            
+            let bookGroup = bookSavedinFav!["Favorites"]
+            
+            let bookExtract = bookGroup![0] as? String
+            
+            if (bookExtract!.containsString(book as! String)){
+                
+             
+               var bookArray = bookExtract?.componentsSeparatedByString(",")
+                
+                
+                bookArray = bookArray?.filter({$0 != (book as! String)})
+                
+                let booksString = bookArray?.joinWithSeparator(",")
+                
+                
+                let favSaved = ["Favorites" : [booksString!]]
+                
+                defaults.setObject(favSaved, forKey: "fav")
+                
+            } else {
+                
+                
+                
+            }
+            
+        }
+        
+    }
+    
+        
 }
+    
+
+
+
 
 //MARK: - Protocols
 
@@ -150,9 +270,16 @@ protocol HackerBooksControllerDelegate {
     
 }
 
+
+
 //MARK: - Extensions
 
 
+
+    
+    
+    
+    
 
 
 

@@ -46,7 +46,9 @@ func parsing (hackerBook json: JSONDictionary) throws -> HackerBook {
         
     
     
-    guard let pdfUrl = json["pdf_url"] as? String, url = NSURL(string: pdfUrl) else {
+    guard let pdfUrl = json["pdf_url"] as? String else {
+        
+        //url = NSURL(string: pdfUrl)
         
         throw HackerBooksErrors.pdfJSONError
         
@@ -62,7 +64,7 @@ func parsing (hackerBook json: JSONDictionary) throws -> HackerBook {
         
         
     
-        return HackerBook(authors: authors, image: image!, pdfUrl: url, tags: tags, title: title)
+        return HackerBook(authors: authors, image: image!, pdfUrl: pdfUrl, tags: tags, title: title)
     
     } else {
         

@@ -30,12 +30,12 @@ class HackerBooksGroup {
     
     var dict : hackerBookswithTags = hackerBookswithTags()
     var tagsArray : [String] = [""]
+    var favsDict : [String : String] = ["":""]
+    
     
     //MARK: - Initializators
     
     init(hbooks books: hackerBooksArray){
-        
-        
         
         for book in books{
             
@@ -55,22 +55,19 @@ class HackerBooksGroup {
                     tagsArray.append(tag)
                     dict[tag] = [book]
                     
-                  
-                    
                 } else {
                     
                     dict[tag]?.append(book)
-                    
-                    
+        
                 }
             
-                
             }
             
-            
-            
-            
         }
+        
+        //Ordenamos tagsArray por orden alfabetico 
+        tagsArray = tagsArray.sort({$0.0 < $0.1})
+        favsDict  = ["":""]
     }
         
     // Cantidad de tags
@@ -91,6 +88,7 @@ class HackerBooksGroup {
         func booksForTagCount(forTags tag: Int) -> Int{
             
             
+            
             guard let count = dict[tagsArray[tag]]?.count else {
                 
                 return 0
@@ -106,6 +104,7 @@ class HackerBooksGroup {
         
         // Aquie le pasamos Ints por el indexpath.row y el section y devolvemos un book
         
+        
         let books = dict[tagsArray[tag]]
         let book = books![index]
     
@@ -113,6 +112,7 @@ class HackerBooksGroup {
 
     }
     
+    //Devolvemos el nombre del tag por la seccion que nos pasan
     func getTags (forSection section: Int) -> String {
         
         return tagsArray[section]
