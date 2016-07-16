@@ -46,12 +46,24 @@ class HackerBooksGroup {
     init(hbooks books: hackerBooksArray){
         
          dict = favorites
+        let defaults = NSUserDefaults.standardUserDefaults()
+        let favsSaved = defaults.dictionaryForKey("favsSaved")
+        let booksSavedFavs = favsSaved?["favorites"] as? [String]
         
         for book in books{
             
-                
+            
+            
             tagsGroup = book.tags!.componentsSeparatedByString(", ")
         
+            if(booksSavedFavs?.contains(book.title!) == true){
+                
+                tagsArray.append("favorites")
+                tagsGroup.append("favorites")
+                
+                
+            }
+
     
             
             for tag in (tagsGroup) {
@@ -65,6 +77,7 @@ class HackerBooksGroup {
                 
                
                 
+                
                 if !tagsArray.contains(tag){
                     
                     tagsArray.append(tag)
@@ -73,7 +86,7 @@ class HackerBooksGroup {
                 } else {
                     
                     dict[tag]?.append(book)
-                    print(dict["favorites"])
+                  
         
                 }
                 
@@ -84,6 +97,16 @@ class HackerBooksGroup {
         
         //Ordenamos tagsArray por orden alfabetico 
         tagsArray = tagsArray.sort({$0.0 < $0.1})
+        print(tagsArray)
+        
+        if let position = tagsArray.indexOf("favorites"){
+            
+            tagsArray.removeAtIndex(position)
+            tagsArray.insert("favorites", atIndex: 0)
+            
+            print(tagsArray)
+            
+        }
         
         
         

@@ -65,7 +65,19 @@ class HackerBookControllerViewController: UIViewController {
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-           
+        
+            let defaults = NSUserDefaults.standardUserDefaults()
+        
+            let favsSaved = defaults.dictionaryForKey("favsSaved")
+        
+            let bookFavsTitle = favsSaved?["favorites"] as? [String]
+        
+            if(bookFavsTitle?.contains(model.title!) == true){
+            
+                model.tags = model.tags! + ", favorites"
+            
+            }
+        
             if((model.tags?.containsString("favorites")) == true){
                 
                 
