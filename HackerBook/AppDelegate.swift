@@ -15,24 +15,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-        // Override point for customization after application launch.
-        //    "authors": "Scott Chacon, Ben Straub",
-        //    "image_url": "http://hackershelf.com/media/cache/b4/24/b42409de128aa7f1c9abbbfa549914de.jpg",
-        //    "pdf_url": "https://progit2.s3.amazonaws.com/en/2015-03-06-439c2/progit-en.376.pdf",
-        //    "tags": "version control, git",
-        //    "title": "Pro Git"
-        
-        //URL del JSON https://t.co/K9ziV0z3SJ
-////        
-//        let urlImageString = "http://hackershelf.com/media/cache/b4/24/b42409de128aa7f1c9abbbfa549914de.jpg"
-//        let urlImage = NSURL(string: urlImageString)
-//        let urlData = NSData(contentsOfURL: urlImage!)
-//        
-//        let hBook = HackerBook(authors: "Scott Chacon, Ben Straub", image: UIImage(data: urlData!)!, pdfUrl: (NSURL(string: "https://progit2.s3.amazonaws.com/en/2015-03-06-439c2/progit-en.376.pdf"))!, tags: "version control, git", title: "Pro Git")
+     
         
         do{
-            
-            
             
             
             let defaults = NSUserDefaults.standardUserDefaults()
@@ -86,9 +71,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         let navTable = UINavigationController(rootViewController: vc)
             
+            let book : HackerBook
+            
+            
+                
+                book = model.bookForTable(atIndex: 0, forTag: 1)
+                
+          
+                
+            
         //Creamos el elemento que se muestra por defecto cuando estamos en SPlit
-            let bookVC = HackerBookControllerViewController(model: model.bookForTable(atIndex: 0,
-                forTag: 1))
+            let bookVC = HackerBookControllerViewController(model: book)
             
         //Asignamos el delegado. Es decir le indicamos al HackerBooksTableTableViewController quien es su delegado
             

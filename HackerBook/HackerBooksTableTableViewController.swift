@@ -12,8 +12,6 @@ class HackerBooksTableTableViewController: UITableViewController {
     
     
     //MARK: - Properties
-    
-
     let model : HackerBooksGroup
     
     //Delegado
@@ -40,12 +38,27 @@ class HackerBooksTableTableViewController: UITableViewController {
     
     override func viewWillAppear(animated: Bool) {
         
+        //let defaults = NSUserDefaults.standardUserDefaults()
+        //defaults.removeObjectForKey("favsSaved")
         
         let nCenter = NSNotificationCenter.defaultCenter()
         
         nCenter.addObserver(self, selector: #selector(bookAddFav), name: "favChangedOn", object: nil)
         nCenter.addObserver(self, selector: #selector(bookRemoveFav), name: "favChangedOff", object: nil)
+        nCenter.addObserver(self, selector: #selector(bookSaveFav), name: "favChangedOn", object: nil)
+        nCenter.addObserver(self, selector: #selector(bookDelFav), name: "favChangedOff", object: nil)
+
+       
         
+        super.viewWillAppear(true)
+        
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(true)
+        
+        let center = NSNotificationCenter.defaultCenter()
+        center.removeObserver(self)
     }
       
     override func viewDidLoad() {
@@ -92,32 +105,41 @@ class HackerBooksTableTableViewController: UITableViewController {
         
         
     }
+    
+    
 
     // MARK: - Table view data source
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
+     
         
-        return model.tagsArray.count
+             return model.tagsArray.count
+     
+        
         
     }
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
         //Numero de filas por seccion.
-        //Es decir cuantos elementos por afiliacion
+        //Es decir cuantos elementos por tag
         
         return model.booksForTagCount(forTags: section)
         
-        //return model.characterCount(forAffiliation: getAffiliation(forSection: section) )
+        
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
         let cellId = "HackerBookCellID"
         
-        let book = model.bookForTable(atIndex: indexPath.row, forTag: indexPath.section)
+        let book : HackerBook
         
+        
+        book = model.bookForTable(atIndex: indexPath.row, forTag: indexPath.section)
+        
+     
         var cell = tableView.dequeueReusableCellWithIdentifier(cellId)
         
         if cell == nil {
@@ -149,111 +171,17 @@ class HackerBooksTableTableViewController: UITableViewController {
     
     func book(forIndexPath indexPath: NSIndexPath) -> HackerBook {
         
+        
         return model.bookForTable(atIndex: indexPath.row, forTag: indexPath.section)
         
-        
     }
     
-    func bookAddFav (notification: NSNotification){
-        
-        
-        let data = notification.userInfo!
-        
-        //Sacamos el libro de la notificacion
-        let book = data["key"]
-    
-        let defaults = NSUserDefaults.standardUserDefaults()
-        
-       
-        
-        //Si no existe el "fav" lo creamos con el primer libro
-        if defaults.dictionaryForKey("fav") == nil {
-            
-            let favSaved = ["Favorites": [book!]]
-            
-            defaults.setObject(favSaved, forKey: "fav")
-            
-            
-        } else {
-            
-            //Sacamos lo que tiene comprobamos y si no existe lo añadimos
-            let bookSavedinFav = defaults.dictionaryForKey("fav")
-            
-            let bookGroup = bookSavedinFav!["Favorites"]
-            
-            var bookExtract = bookGroup![0] as? String
-            
-            if (bookExtract!.containsString(book as! String)){
-                
-                //Si lo contiene no hacemos nada
-                
-            } else {
-            
-            bookExtract = bookExtract! + ",\(book!)"
-            
-            let favSaved = ["Favorites": [bookExtract!]]
-
-            defaults.setObject(favSaved, forKey: "fav")
-            
-            }
-        
-        }
-
-    }
-    
-    
-    func bookRemoveFav (notification: NSNotification){
-        
-        
-        let data = notification.userInfo!
-        
-        //Sacamos el libro de la notificacion
-        let book = data["key"]
-        
-        let defaults = NSUserDefaults.standardUserDefaults()
-        
-        
-        //Si no existe no hacemos nada
-        if defaults.dictionaryForKey("fav") == nil {
-           //no hacer nada
-            
-            
-        } else {
-            
-            //Sacamos lo que tiene comprobamos y si existe lo borramos
-            let bookSavedinFav = defaults.dictionaryForKey("fav")
-            
-            let bookGroup = bookSavedinFav!["Favorites"]
-            
-            let bookExtract = bookGroup![0] as? String
-            
-            if (bookExtract!.containsString(book as! String)){
-                
-             
-               var bookArray = bookExtract?.componentsSeparatedByString(",")
-                
-                
-                bookArray = bookArray?.filter({$0 != (book as! String)})
-                
-                let booksString = bookArray?.joinWithSeparator(",")
-                
-                
-                let favSaved = ["Favorites" : [booksString!]]
-                
-                defaults.setObject(favSaved, forKey: "fav")
-                
-            } else {
-                
-                
-                
-            }
-            
-        }
-        
-    }
-    
-        
 }
+    
+    
+
+        
+
     
 
 
@@ -274,7 +202,141 @@ protocol HackerBooksControllerDelegate {
 
 //MARK: - Extensions
 
+extension HackerBooksTableTableViewController {
+ //Pertenece al comportamiento del switch de favoritos
+    
+    func bookAddFav (notification: NSNotification){
+        
+        
+        let data = notification.userInfo!
+        
+        //Sacamos el libro de la notificacion
+        let bookData : HackerBook = data["key"] as! HackerBook
+        
+        
+        if (model.tagsArray.contains("favorites") == false){
+            
+            print("Pasamos por aqui no tenemos favoritos")
+          
+        //model.tagsGroup.append("favorites")
+            model.tagsArray.insert("favorites", atIndex: 0)
+            model.dict["favorites"]?.append(bookData)
+            
+        //bookData.tags = bookData.tags! + ", favorites"
+            
+          self.tableView.reloadData()
+            
+            
+        } else {
+            
+            model.dict["favorites"]?.append(bookData)
+           self.tableView.reloadData()
+            
+        }
+        
+    }
 
+func bookRemoveFav (notification: NSNotification){
+            
+
+            let data = notification.userInfo!
+    
+            //Sacamos el libro de la notificacion
+            let book = data["key"] as? HackerBook
+    
+            let favArray = model.dict["favorites"]
+    
+            let potision = favArray!.indexOf({$0.title == book!.title })
+    
+            model.dict["favorites"]?.removeAtIndex(potision!)
+    
+            book!.tags = book?.tags!.stringByReplacingOccurrencesOfString(", favorites", withString: "")
+    
+    
+            //model.dict["favorites"]?.removeAtIndex(position)
+    
+            self.tableView.reloadData()
+
+                
+     }
+}
+
+extension HackerBooksTableTableViewController {
+    //Pertenece al guardado de favoritos
+    
+    
+    
+    func bookSaveFav(notification : NSNotification){
+        let defaults = NSUserDefaults.standardUserDefaults()
+        
+        let favContains = defaults.dictionaryForKey("favsSaved")
+    
+        let data = notification.userInfo!
+        
+        let book = data["key"] as? HackerBook
+        
+        let bookTitle = book!.title
+        //comprobamos si ya existe el guardado
+        
+ 
+        
+        if (favContains == nil) {
+        
+        let bookFavs = ["favorites" : [bookTitle!]]
+        
+        defaults.setObject(bookFavs, forKey: "favsSaved")
+        
+        } else {
+        
+            var favsSaved = favContains!["favorites"] as? Array<String>
+            
+            if(favsSaved?.contains(bookTitle!) == false){
+            
+                favsSaved?.append(bookTitle!)
+            
+                let bookFavs = ["favorites" : favsSaved!]
+            
+                defaults.setObject(bookFavs, forKey: "favsSaved")
+            }
+            
+        }
+        
+    }
+    
+    
+    
+    func bookDelFav(notification : NSNotification){
+        
+        let defaults = NSUserDefaults.standardUserDefaults()
+        
+        let favContains = defaults.dictionaryForKey("favsSaved")
+        
+        var favArrays = favContains!["favorites"] as? Array<String>
+        
+        let data = notification.userInfo!
+        
+        let book = data["key"] as? HackerBook
+        
+        let bookTitle = book?.title
+        
+        if (favArrays?.contains(bookTitle!) == true ){
+            
+            let position = favArrays!.indexOf({$0 == bookTitle})
+            
+            favArrays?.removeAtIndex(position!)
+            
+            let favsSaved = ["favorites" : favArrays!]
+            
+            defaults.setObject(favsSaved, forKey: "favsSaved")
+            
+        }
+        
+    }
+    
+    
+    
+    
+}
 
     
     

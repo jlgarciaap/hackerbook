@@ -6,6 +6,7 @@
 //  Copyright © 2016 styleapps. All rights reserved.
 //
 
+import Foundation
 
 
 class HackerBooksGroup {
@@ -23,32 +24,46 @@ class HackerBooksGroup {
     
     typealias tagString = String
     
+    
+    
     //NOs ayuda a separar los libros por tags
     typealias hackerBookswithTags = [ tagString : hackerBooksArray]
     
     //MARK: - Properties
     
     var dict : hackerBookswithTags = hackerBookswithTags()
-    var tagsArray : [String] = [""]
-    var favsDict : [String : String] = ["":""]
+    var tagsArray : [String] = [] //Almacenamos los tags existentes
+    var tagsGroup : [String] = [] // Almacenamos los tags del libro en cuestion
+    var favorites = ["favorites" : hackerBooksArray()]
+    
+    
+    //MARK: - Util
+    let defaults = NSUserDefaults.standardUserDefaults()
     
     
     //MARK: - Initializators
     
     init(hbooks books: hackerBooksArray){
         
+         dict = favorites
+        
         for book in books{
             
-            let tagsGroup = book.tags?.componentsSeparatedByString(",")
-            
-            for tag in (tagsGroup)! {
                 
-               
+            tagsGroup = book.tags!.componentsSeparatedByString(", ")
+        
+    
+            
+            for tag in (tagsGroup) {
+
+                
                 if dict.count == 0 {
                     
                     dict = [ tag : hackerBooksArray()]
                     
                 }
+                
+               
                 
                 if !tagsArray.contains(tag){
                     
@@ -58,16 +73,20 @@ class HackerBooksGroup {
                 } else {
                     
                     dict[tag]?.append(book)
+                    print(dict["favorites"])
         
                 }
-            
+                
+                
             }
             
         }
         
         //Ordenamos tagsArray por orden alfabetico 
         tagsArray = tagsArray.sort({$0.0 < $0.1})
-        favsDict  = ["":""]
+        
+        
+        
     }
         
     // Cantidad de tags
@@ -76,8 +95,7 @@ class HackerBooksGroup {
             
             get {
                 
-                return dict.count
-                
+                return tagsArray.count
             }
             
         }
@@ -87,8 +105,7 @@ class HackerBooksGroup {
         
         func booksForTagCount(forTags tag: Int) -> Int{
             
-            
-            
+        
             guard let count = dict[tagsArray[tag]]?.count else {
                 
                 return 0
@@ -99,6 +116,8 @@ class HackerBooksGroup {
             
         }
     
+ 
+    
     // identificamos libro por tag
     func bookForTable (atIndex index: Int, forTag tag: Int ) -> HackerBook{
         
@@ -106,9 +125,16 @@ class HackerBooksGroup {
         
         
         let books = dict[tagsArray[tag]]
+        
         let book = books![index]
-    
+        
         return book
+            
+            
+            //Podemos intentar recibir el contenido de favoritos desde el controlador a una funcion aqui 
+            //que tambien la llamamos desde aqui para que devuelva el contenido
+            
+       
 
     }
     
@@ -118,9 +144,7 @@ class HackerBooksGroup {
         return tagsArray[section]
         
         
-    }
-    
-        
+        }
     
     
     }

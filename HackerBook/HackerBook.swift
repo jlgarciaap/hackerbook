@@ -16,10 +16,9 @@ class HackerBook{
     let authors: String?
     let image: UIImage
     let pdfUrl: String?
-    let tags: String?
+    var tags: String?
     let title: String?
-    
-    
+        
     //MARK: - Initialization
     
     init( authors: String?, image: UIImage, pdfUrl: String?, tags: String?, title: String?){
@@ -27,8 +26,11 @@ class HackerBook{
         self.authors = authors
         self.image = image
         self.pdfUrl = pdfUrl
+            
         self.tags = tags
+        
         self.title = title
+        
         
         
     }

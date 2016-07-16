@@ -51,18 +51,12 @@ func parsing (hackerBook json: JSONDictionary) throws -> HackerBook {
         //url = NSURL(string: pdfUrl)
         
         throw HackerBooksErrors.pdfJSONError
-        
+                
     }
     
     
-
-    
     
     if let tags = json["tags"] as? String {
-        
-        
-        
-        
     
         return HackerBook(authors: authors, image: image!, pdfUrl: pdfUrl, tags: tags, title: title)
     

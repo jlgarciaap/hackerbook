@@ -65,29 +65,9 @@ class HackerBookControllerViewController: UIViewController {
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        //Cargamos lo que tengamos guardados
-        let defaults = NSUserDefaults.standardUserDefaults()
-        
-        //Para limpiar fav
-        //defaults.removeObjectForKey("fav")
-       
-        
-        //Si no existe
-        if defaults.dictionaryForKey("fav") == nil {
-            
-            //no hacemos nada
-            
-        } else {
-            
-            //Sacamos lo que tiene comprobamos y si esta favSwitch on si no off
-            let bookSavedinFav = defaults.dictionaryForKey("fav")
-            
-            let bookGroup = bookSavedinFav!["Favorites"]
-            
-            let bookExtract = bookGroup![0] as? String
-            
-            
-            if (bookExtract!.containsString(model.title!)){
+           
+            if((model.tags?.containsString("favorites")) == true){
+                
                 
                 favSwitch.on = true
                 
@@ -96,9 +76,6 @@ class HackerBookControllerViewController: UIViewController {
                 favSwitch.on = false
                 
             }
-            
-        }
-
         
         
         syncModelWithView()
@@ -136,18 +113,24 @@ class HackerBookControllerViewController: UIViewController {
             
             
             
-            let notif = NSNotification(name: "favChangedOn", object: self, userInfo: ["key": model.title!])
+            let notif = NSNotification(name: "favChangedOn", object: self, userInfo: ["key": model])
             
             nCenter.postNotification(notif)
+            
+            model.tags = model.tags! + ", favorites"
+            
+            syncModelWithView()
             
             
             
         } else {
             
-            let notif = NSNotification(name: "favChangedOff", object: self, userInfo: ["key": model.title!])
+            let notif = NSNotification(name: "favChangedOff", object: self, userInfo: ["key": model])
             
             nCenter.postNotification(notif)
             
+            model.tags = model.tags?.stringByReplacingOccurrencesOfString(", favorites", withString: "")
+            syncModelWithView()
         }
         
         
