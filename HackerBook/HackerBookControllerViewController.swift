@@ -50,7 +50,7 @@ class HackerBookControllerViewController: UIViewController {
         
     }
 
-
+    
     
     //MARK: - Sync
     func syncModelWithView () {
@@ -73,9 +73,13 @@ class HackerBookControllerViewController: UIViewController {
             let bookFavsTitle = favsSaved?["favorites"] as? [String]
         
             if(bookFavsTitle?.contains(model.title!) == true){
-            
+                
+                //Controlamos para que no nos repita en la vista el favorites tag cada vez que pulsemos
+                if((model.tags?.containsString("favorites")) == false){
+                
                 model.tags = model.tags! + ", favorites"
             
+                }
             }
         
             if((model.tags?.containsString("favorites")) == true){

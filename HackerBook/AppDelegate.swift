@@ -19,21 +19,32 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         do{
             
+            let documents = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0]
             
-            let defaults = NSUserDefaults.standardUserDefaults()
+            let fileSavedPath = documents.stringByAppendingString("/hackerBooksData.json")
             
-            if (defaults.dataForKey("JSONFile") == nil){
-            
-            defaults.setObject(NSData(contentsOfURL: NSURL(string: "https://t.co/K9ziV0z3SJ")!), forKey: "JSONFile")
-            
+            guard let url = NSURL(string: "https://t.co/K9ziV0z3SJ") else {
+                
+                throw HackerBooksErrors.JSONParsingError
+                
             }
             
-             let fileDownload = defaults.dataForKey("JSONFile")
+            
+            if(NSFileManager.defaultManager().fileExistsAtPath(fileSavedPath) == false){
+                let data = NSData(contentsOfURL: url)!
+                
+                print("no tenemos datos")
+                
+                let documentsPath = NSURL(fileURLWithPath: documents).URLByAppendingPathComponent("hackerBooksData.json")
+                data.writeToURL(documentsPath, atomically: false)
+            }
             
             
+            let documentPath = NSURL(fileURLWithPath: documents).URLByAppendingPathComponent("hackerBooksData.json")
+            let data = NSData(contentsOfURL: documentPath)
             
         
-        let jsonFile = try loadFromSaveFile(file: fileDownload!)
+        let jsonFile = try loadFromSaveFile(file: data!)
         
         var books = [HackerBook]()
         
@@ -56,8 +67,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             
           
             
-          
-       
             
        let model = HackerBooksGroup(hbooks: books)
         
@@ -96,10 +105,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             
         //Creamos el SplitView
             
-            let splitVC = UISplitViewController()
-            splitVC.viewControllers = [navTable, navBook]
+        let splitVC = UISplitViewController()
+        splitVC.viewControllers = [navTable, navBook]
             
-            window = UIWindow(frame: UIScreen.mainScreen().bounds)
+        window = UIWindow(frame: UIScreen.mainScreen().bounds)
         
         window?.rootViewController = splitVC
         

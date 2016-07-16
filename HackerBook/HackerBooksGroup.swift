@@ -34,7 +34,7 @@ class HackerBooksGroup {
     var dict : hackerBookswithTags = hackerBookswithTags()
     var tagsArray : [String] = [] //Almacenamos los tags existentes
     var tagsGroup : [String] = [] // Almacenamos los tags del libro en cuestion
-    var favorites = ["favorites" : hackerBooksArray()]
+    var favorites = ["Favorites" : hackerBooksArray()]
     
     
     //MARK: - Util
@@ -58,7 +58,7 @@ class HackerBooksGroup {
         
             if(booksSavedFavs?.contains(book.title!) == true){
                 
-                tagsArray.append("favorites")
+                //tagsArray.append("favorites")
                 tagsGroup.append("favorites")
                 
                 
@@ -78,14 +78,14 @@ class HackerBooksGroup {
                
                 
                 
-                if !tagsArray.contains(tag){
+                if !tagsArray.contains(tag.capitalizedString){
                     
-                    tagsArray.append(tag)
-                    dict[tag] = [book]
+                    tagsArray.append(tag.capitalizedString)
+                    dict[tag.capitalizedString] = [book]
                     
                 } else {
                     
-                    dict[tag]?.append(book)
+                    dict[tag.capitalizedString]?.append(book)
                   
         
                 }
@@ -97,14 +97,12 @@ class HackerBooksGroup {
         
         //Ordenamos tagsArray por orden alfabetico 
         tagsArray = tagsArray.sort({$0.0 < $0.1})
-        print(tagsArray)
+       
         
-        if let position = tagsArray.indexOf("favorites"){
+        if let position = tagsArray.indexOf("Favorites"){
             
             tagsArray.removeAtIndex(position)
-            tagsArray.insert("favorites", atIndex: 0)
-            
-            print(tagsArray)
+            tagsArray.insert("Favorites", atIndex: 0)
             
         }
         

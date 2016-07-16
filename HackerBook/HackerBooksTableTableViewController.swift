@@ -48,9 +48,9 @@ class HackerBooksTableTableViewController: UITableViewController {
         nCenter.addObserver(self, selector: #selector(bookSaveFav), name: "favChangedOn", object: nil)
         nCenter.addObserver(self, selector: #selector(bookDelFav), name: "favChangedOff", object: nil)
 
-       
         
         super.viewWillAppear(true)
+        
         
     }
     
@@ -177,14 +177,6 @@ class HackerBooksTableTableViewController: UITableViewController {
     }
     
 }
-    
-    
-
-        
-
-    
-
-
 
 
 //MARK: - Protocols
@@ -214,13 +206,13 @@ extension HackerBooksTableTableViewController {
         let bookData : HackerBook = data["key"] as! HackerBook
         
         
-        if (model.tagsArray.contains("favorites") == false){
+        if (model.tagsArray.contains("Favorites") == false){
             
             print("Pasamos por aqui no tenemos favoritos")
           
         //model.tagsGroup.append("favorites")
-            model.tagsArray.insert("favorites", atIndex: 0)
-            model.dict["favorites"]?.append(bookData)
+            model.tagsArray.insert("Favorites", atIndex: 0)
+            model.dict["Favorites"]?.append(bookData)
             
         //bookData.tags = bookData.tags! + ", favorites"
             
@@ -229,7 +221,7 @@ extension HackerBooksTableTableViewController {
             
         } else {
             
-            model.dict["favorites"]?.append(bookData)
+            model.dict["Favorites"]?.append(bookData)
            self.tableView.reloadData()
             
         }
@@ -244,11 +236,11 @@ func bookRemoveFav (notification: NSNotification){
             //Sacamos el libro de la notificacion
             let book = data["key"] as? HackerBook
     
-            let favArray = model.dict["favorites"]
+            let favArray = model.dict["Favorites"]
     
             let potision = favArray!.indexOf({$0.title == book!.title })
     
-            model.dict["favorites"]?.removeAtIndex(potision!)
+            model.dict["Favorites"]?.removeAtIndex(potision!)
     
             book!.tags = book?.tags!.stringByReplacingOccurrencesOfString(", favorites", withString: "")
     

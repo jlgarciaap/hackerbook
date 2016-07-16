@@ -113,9 +113,6 @@ func loadFromSaveFile (file name: NSData) throws -> JSONArray {
     
    if let maybeArray = try? NSJSONSerialization.JSONObjectWithData(name, options: NSJSONReadingOptions.MutableContainers) as? JSONArray, array = maybeArray{
         
-        
-        
-        
         return array
         
     } else{

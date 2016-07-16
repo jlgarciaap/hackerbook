@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Foundation
 
 class HackerPdfViewController: UIViewController, UIWebViewDelegate {
     
@@ -96,13 +97,18 @@ class HackerPdfViewController: UIViewController, UIWebViewDelegate {
     
     func obtainNSData(StringUrl urlPdf: String) -> NSData{
         
-        let defaults = NSUserDefaults.standardUserDefaults()
-        
-        if (defaults.dataForKey(urlPdf) == nil){
-        
-        let nsUrlCast = NSURL(string: urlPdf)!
+        let stringKey = (model.title! as String) + ".data"
     
         
+        let downloadURL = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)[0]
+        
+        let writeDownPath = downloadURL.URLByAppendingPathComponent(stringKey).path!
+    
+        
+        if(NSData(contentsOfFile: writeDownPath) == nil){
+            
+            
+        let nsUrlCast = NSURL(string: urlPdf)!
         
         guard let dataURL : NSData = NSData(contentsOfURL: nsUrlCast) else {
             
@@ -114,19 +120,20 @@ class HackerPdfViewController: UIViewController, UIWebViewDelegate {
             
             self.presentViewController(alertController, animated: true, completion: nil)
             
-          return NSData()
-        }
+            return NSData()
+            }
+            
+            
+            
+            dataURL.writeToFile(writeDownPath, atomically: true)
         
-        defaults.setObject(dataURL, forKey: urlPdf)
-            
-        return dataURL
-            
-        } else {
-            
-            let dataURL = defaults.dataForKey(urlPdf)!
-            
             return dataURL
         }
+        
+        
+        let dataURL = NSData(contentsOfFile: writeDownPath)
+        
+        return dataURL!
         
     }
     
