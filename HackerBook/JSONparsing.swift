@@ -14,41 +14,40 @@ typealias JSONArray = [JSONDictionary]
 
 //MARK: - Parsing JSON
 
-//    "authors": "Scott Chacon, Ben Straub",
-//    "image_url": "http://hackershelf.com/media/cache/b4/24/b42409de128aa7f1c9abbbfa549914de.jpg",
-//    "pdf_url": "https://progit2.s3.amazonaws.com/en/2015-03-06-439c2/progit-en.376.pdf",
-//    "tags": "version control, git",
-//    "title": "Pro Git"
-
-
 func parsing (hackerBook json: JSONDictionary) throws -> HackerBook {
     
     let defaults = NSUserDefaults.standardUserDefaults()
     
     let authors = json["authors"] as? String
-    let title = json["title"] as? String
     
-    if (defaults.dataForKey(title!) == nil){
+    guard let title = json["title"] as? String else{
+        
+        throw HackerBooksErrors.JSONParsingError
+        
+    }
+    
+    if (defaults.dataForKey(title) == nil){
     
     guard let imageUrlString = json["image_url"] as? String, imageUrl = NSURL(string: imageUrlString), dataImage = NSData(contentsOfURL: imageUrl) else{
         
-        //image = UIImage(data: dataImage)
         throw HackerBooksErrors.imageJSONError
         
         }
-    
-        defaults.setObject(dataImage, forKey: title!)
+        
+        //Si todo va bien lo guardamos
+        defaults.setObject(dataImage, forKey: title)
     }
         
-        let imageData = defaults.dataForKey(title!)
+    guard let imageData = defaults.dataForKey(title) else{
         
-        let image = UIImage(data: imageData!)
+        throw HackerBooksErrors.imageSaveRecoverFailed
         
-    
+    }
+        
+    let image = UIImage(data: imageData)
     
     guard let pdfUrl = json["pdf_url"] as? String else {
         
-        //url = NSURL(string: pdfUrl)
         
         throw HackerBooksErrors.pdfJSONError
                 
@@ -92,9 +91,6 @@ func loadFromLocalFile(fileName name: String, bundle: NSBundle = NSBundle.mainBu
     
     if let url = bundle.URLForResource(name), data = NSData(contentsOfURL: url),
         maybeArray = try? NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.MutableContainers) as? JSONArray, array = maybeArray{
-        
-        
-        
         
         return array
         

@@ -8,7 +8,7 @@
 
 import UIKit
 
-class HackerBooksTableTableViewController: UITableViewController {
+class HackerBooksTableViewController: UITableViewController {
     
     
     //MARK: - Properties
@@ -20,6 +20,7 @@ class HackerBooksTableTableViewController: UITableViewController {
     
     //Segmented Control
     var orderSelect : UISegmentedControl
+    
     
     //MARK: - Initialization
     
@@ -50,11 +51,6 @@ class HackerBooksTableTableViewController: UITableViewController {
         nCenter.addObserver(self, selector: #selector(bookRemoveFav), name: "favChangedOff", object: nil)
         nCenter.addObserver(self, selector: #selector(bookSaveFav), name: "favChangedOn", object: nil)
         nCenter.addObserver(self, selector: #selector(bookDelFav), name: "favChangedOff", object: nil)
-
-        
-       self.tableView.registerNib(UINib(nibName:"HackerBooksCellView", bundle: nil), forCellReuseIdentifier: "HackerBooksCellView")
-        
-        
         
     }
     
@@ -67,10 +63,15 @@ class HackerBooksTableTableViewController: UITableViewController {
       
     override func viewDidLoad() {
         super.viewDidLoad()
+       
+        //Registramos celda personalizada
+        self.tableView.registerNib(UINib(nibName:"HackerBooksCellView", bundle: nil), forCellReuseIdentifier: "HackerBooksCellView")
+
         
-        self.orderSelect.selectedSegmentIndex = 1
+        self.orderSelect.selectedSegmentIndex = 0
         
         self.navigationItem.titleView = self.orderSelect
+        //Controlamos los cambios en el selector
         self.orderSelect.addTarget(self, action: #selector(reloadTable), forControlEvents: .ValueChanged)
         
     }
@@ -88,14 +89,6 @@ class HackerBooksTableTableViewController: UITableViewController {
         //Averiguamos el libro
         let bookSelect = book(forIndexPath: indexPath)
         
-        
-        //raw value 0 iphone n raw value 1 ipad
-        
-        if (UIDevice.currentDevice().userInterfaceIdiom.rawValue == 0){
-        
-        let bookVC = HackerBookControllerViewController(model: bookSelect)
-        navigationController?.pushViewController(bookVC, animated: true)
-        }
         //avisamos al delegado del cambio
         delegate?.hackerBooksViewController(self, didSelectBook: bookSelect)
         
@@ -105,6 +98,14 @@ class HackerBooksTableTableViewController: UITableViewController {
         let notif = NSNotification(name: "BookChanged", object: self, userInfo: ["key": bookSelect])
         
         nCenter.postNotification(notif)
+        
+        //Para movernos cuando es Iphone
+        //raw value 0 iphone en raw value 1 ipad
+        if (UIDevice.currentDevice().userInterfaceIdiom.rawValue == 0){
+            
+            let bookVC = HackerBookViewController(model: bookSelect)
+            navigationController?.pushViewController(bookVC, animated: true)
+        }
         
         
     }
@@ -116,7 +117,8 @@ class HackerBooksTableTableViewController: UITableViewController {
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
         
-        if( self.orderSelect.selectedSegmentIndex == 0){
+        //Segun el segment seleccionado devolvemos una cosa u otra
+        if(self.orderSelect.selectedSegmentIndex == 0){
         
          return model.tagsArray.count
         }
@@ -132,8 +134,10 @@ class HackerBooksTableTableViewController: UITableViewController {
         //Numero de filas por seccion.
         //Es decir cuantos elementos por tag
         
+        //Segun el segment seleccionado devolvemos una cosa u otra
         if (self.orderSelect.selectedSegmentIndex == 0){
-        return model.booksForTagCount(forTags: section)
+            
+            return model.booksForTagCount(forTags: section)
         }
         
         return model.booksForSectionOrdered(forSect: section)
@@ -148,13 +152,14 @@ class HackerBooksTableTableViewController: UITableViewController {
         
         if(self.orderSelect.selectedSegmentIndex == 0){
         
-        book = model.bookForTable(atIndex: indexPath.row, forTag: indexPath.section)
+            book = model.bookForTable(atIndex: indexPath.row, forTag: indexPath.section)
+        
         } else {
         
-        book = model.bookForTableOrdered(atIndex: indexPath.row, forSect: indexPath.section)
-        
+            book = model.bookForTableOrdered(atIndex: indexPath.row, forSect: indexPath.section)         
         }
-     
+        
+        //Celda personalizada
         let cell : HackerBooksCellView = tableView.dequeueReusableCellWithIdentifier(cellId) as! HackerBooksCellView
         
         cell.authorsLabel.text = book.authors
@@ -183,15 +188,17 @@ class HackerBooksTableTableViewController: UITableViewController {
     
     override func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         
-        if (self.orderSelect.selectedSegmentIndex == 1){
+        //Segun el segment seleccionado devolvemos una cosa u otra
+        if (self.orderSelect.selectedSegmentIndex == 0){
             
-            return 0
+            return 40.0
         }
         
-        return 40.0
+        return 0
         
     }
     
+    //Para la celda seleccionada ponemos el tamaño de la celda
     override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         
         return 172.0
@@ -199,7 +206,8 @@ class HackerBooksTableTableViewController: UITableViewController {
     
     override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         
-        if self.orderSelect.selectedSegmentIndex == 0 {
+        //Segun el segment seleccionado devolvemos una cosa u otra
+        if (self.orderSelect.selectedSegmentIndex == 0) {
         
         return model.getTags(forSection: section)
         
@@ -214,9 +222,10 @@ class HackerBooksTableTableViewController: UITableViewController {
     
     func book(forIndexPath indexPath: NSIndexPath) -> HackerBook {
         
-        if self.orderSelect.selectedSegmentIndex == 0 {
+        //Segun el segment seleccionado devolvemos una cosa u otra
+        if (self.orderSelect.selectedSegmentIndex == 0) {
         
-        return model.bookForTable(atIndex: indexPath.row, forTag: indexPath.section)
+            return model.bookForTable(atIndex: indexPath.row, forTag: indexPath.section)
         }
        
         return model.bookForTableOrdered(atIndex: indexPath.row, forSect: indexPath.section)
@@ -233,7 +242,7 @@ class HackerBooksTableTableViewController: UITableViewController {
 protocol HackerBooksControllerDelegate {
 
     
-    func hackerBooksViewController(vc: HackerBooksTableTableViewController, didSelectBook book: HackerBook)
+    func hackerBooksViewController(vc: HackerBooksTableViewController, didSelectBook book: HackerBook)
     
     
 }
@@ -242,74 +251,67 @@ protocol HackerBooksControllerDelegate {
 
 //MARK: - Extensions
 
-extension HackerBooksTableTableViewController {
-    
+extension HackerBooksTableViewController {
+    //Funcion que responde al cambio de segmento
     func reloadTable(){
         
         self.orderSelect.selectedSegmentIndex != self.orderSelect.selectedSegmentIndex
-        
-        
-        
+
         self.tableView.reloadData()
         
-        
     }
-    
-    
+
 }
 
-extension HackerBooksTableTableViewController {
+
+extension HackerBooksTableViewController {
  //Pertenece al comportamiento del switch de favoritos
     
     func bookAddFav (notification: NSNotification){
         
-        
         let data = notification.userInfo!
+        let keyFavorites = "Favorites"
         
         //Sacamos el libro de la notificacion
         let bookData : HackerBook = data["key"] as! HackerBook
         
         
-        if (model.tagsArray.contains("Favorites") == false){
+        //Si dentro de donde almacenamos los tags no tenemos Favorites lo añadimos
+        //y tambien al modelo de la vista
+        if (model.tagsArray.contains(keyFavorites) == false){
             
-            print("Pasamos por aqui no tenemos favoritos")
-          
-        //model.tagsGroup.append("favorites")
-            model.tagsArray.insert("Favorites", atIndex: 0)
-            model.dict["Favorites"]?.append(bookData)
+            model.tagsArray.insert(keyFavorites, atIndex: 0)
             
-        //bookData.tags = bookData.tags! + ", favorites"
+            model.dict[keyFavorites]?.append(bookData)
             
-          self.tableView.reloadData()
+            self.tableView.reloadData()
             
             
         } else {
             
-            model.dict["Favorites"]?.append(bookData)
-           self.tableView.reloadData()
+            model.dict[keyFavorites]?.append(bookData)
+           
+            self.tableView.reloadData()
             
         }
         
     }
 
 func bookRemoveFav (notification: NSNotification){
-            
-
+    
             let data = notification.userInfo!
+            let keyFavorites = "Favorites"
     
             //Sacamos el libro de la notificacion
             let book = data["key"] as? HackerBook
     
-            let favArray = model.dict["Favorites"]
+            let favArray = model.dict[keyFavorites]
     
             let potision = favArray!.indexOf({$0.title == book!.title })
     
-            model.dict["Favorites"]?.removeAtIndex(potision!)
+            model.dict[keyFavorites]?.removeAtIndex(potision!)
     
             book!.tags = book?.tags!.stringByReplacingOccurrencesOfString(", favorites", withString: "")
-    
-    
-            //model.dict["favorites"]?.removeAtIndex(position)
     
             self.tableView.reloadData()
 
@@ -317,15 +319,20 @@ func bookRemoveFav (notification: NSNotification){
      }
 }
 
-extension HackerBooksTableTableViewController {
+extension HackerBooksTableViewController {
     //Pertenece al guardado de favoritos
     
     
     
     func bookSaveFav(notification : NSNotification){
-        let defaults = NSUserDefaults.standardUserDefaults()
         
-        let favContains = defaults.dictionaryForKey("favsSaved")
+        let keyFavsSaved = "favsSaved"
+        let keyFavorites  = "favorites"
+        
+        
+        let defaults = NSUserDefaults.standardUserDefaults()
+      
+        let favContains = defaults.dictionaryForKey(keyFavsSaved)
     
         let data = notification.userInfo!
         
@@ -334,25 +341,23 @@ extension HackerBooksTableTableViewController {
         let bookTitle = book!.title
         //comprobamos si ya existe el guardado
         
- 
-        
         if (favContains == nil) {
         
-        let bookFavs = ["favorites" : [bookTitle!]]
+            let bookFavs = [keyFavorites : [bookTitle!]]
         
-        defaults.setObject(bookFavs, forKey: "favsSaved")
+            defaults.setObject(bookFavs, forKey: keyFavsSaved)
         
         } else {
         
-            var favsSaved = favContains!["favorites"] as? Array<String>
+            var favsSaved = favContains![keyFavorites] as? Array<String>
             
             if(favsSaved?.contains(bookTitle!) == false){
             
                 favsSaved?.append(bookTitle!)
             
-                let bookFavs = ["favorites" : favsSaved!]
+                let bookFavs = [keyFavorites : favsSaved!]
             
-                defaults.setObject(bookFavs, forKey: "favsSaved")
+                defaults.setObject(bookFavs, forKey: keyFavsSaved)
             }
             
         }
@@ -363,11 +368,14 @@ extension HackerBooksTableTableViewController {
     
     func bookDelFav(notification : NSNotification){
         
+        let keyFavsSaved = "favsSaved"
+        let keyFavorites  = "favorites"
+        
         let defaults = NSUserDefaults.standardUserDefaults()
         
-        let favContains = defaults.dictionaryForKey("favsSaved")
+        let favContains = defaults.dictionaryForKey(keyFavsSaved)
         
-        var favArrays = favContains!["favorites"] as? Array<String>
+        var favArrays = favContains![keyFavorites] as? Array<String>
         
         let data = notification.userInfo!
         
@@ -375,15 +383,16 @@ extension HackerBooksTableTableViewController {
         
         let bookTitle = book?.title
         
+        //Si esta dentro obtenemos la posicion y lo eliminamos
         if (favArrays?.contains(bookTitle!) == true ){
             
             let position = favArrays!.indexOf({$0 == bookTitle})
             
             favArrays?.removeAtIndex(position!)
             
-            let favsSaved = ["favorites" : favArrays!]
+            let favsSaved = [keyFavorites : favArrays!]
             
-            defaults.setObject(favsSaved, forKey: "favsSaved")
+            defaults.setObject(favsSaved, forKey: keyFavsSaved)
             
         }
         

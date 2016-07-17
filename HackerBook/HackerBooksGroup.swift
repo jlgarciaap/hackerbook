@@ -12,12 +12,6 @@ import Foundation
 class HackerBooksGroup {
     
     
-    //    "authors": "Scott Chacon, Ben Straub",
-    //    "image_url": "http://hackershelf.com/media/cache/b4/24/b42409de128aa7f1c9abbbfa549914de.jpg",
-    //    "pdf_url": "https://progit2.s3.amazonaws.com/en/2015-03-06-439c2/progit-en.376.pdf",
-    //    "tags": "version control, git",
-    //    "title": "Pro Git"
-    
     //MARK: - Aliases
     
     typealias hackerBooksArray = [HackerBook]
@@ -28,10 +22,9 @@ class HackerBooksGroup {
     
     
     
-    //NOs ayuda a separar los libros por tags
+    //Nos ayuda a separar los libros por tags
     typealias hackerBookswithTags = [ tagString : hackerBooksArray]
     
-    typealias booksGroupsTitles = [titleString : hackerBooksArray]
     
     //MARK: - Properties
     
@@ -39,11 +32,12 @@ class HackerBooksGroup {
     var tagsArray : [String] = [] //Almacenamos los tags existentes
     var tagsGroup : [String] = [] // Almacenamos los tags del libro en cuestion
     var favorites = ["Favorites" : hackerBooksArray()]
+    
+    //-----En cuanto a la vista por titulos-----//
+    typealias booksGroupsTitles = [titleString : hackerBooksArray]
     var booksGroup : booksGroupsTitles = booksGroupsTitles()
     var booksTitles : [String] = []//Almacenamos los titulos de los libros
-    
-    //MARK: - Util
-    let defaults = NSUserDefaults.standardUserDefaults()
+    //-----Fin vista por titulos-----//
     
     
     //MARK: - Initializators
@@ -57,28 +51,26 @@ class HackerBooksGroup {
         
         for book in books{
         
+            
+            //--------Para los titulos----//
             if booksGroup.count == 0 {
                 
                 booksGroup = [book.title! : hackerBooksArray()]
                 
             }
             
-            //--------Para los titutlos----//
             if booksTitles.contains(book.title!) == false{
                 booksTitles.append(book.title!)
                 
                 booksGroup[book.title!] = [book]
                 
             }
-
-            
-            //-----fin de los titutos---
+            //-----fin de los titutos-------//
             
             tagsGroup = book.tags!.componentsSeparatedByString(", ")
         
             if(booksSavedFavs?.contains(book.title!) == true){
                 
-                //tagsArray.append("favorites")
                 tagsGroup.append("favorites")
                 
             }
@@ -91,10 +83,7 @@ class HackerBooksGroup {
                     dict = [ tag : hackerBooksArray()]
                     
                 }
-                
-               
-                
-                
+            
                 if !tagsArray.contains(tag.capitalizedString){
                     
                     tagsArray.append(tag.capitalizedString)
@@ -106,19 +95,17 @@ class HackerBooksGroup {
                   
         
                 }
-                
-                
             }
-            
         }
         
-        //------Para los titulos---//
-        
-        
+        //-----------------Para los titulos--------------------------//
+            //Ordenamos los titulos para la tabla
         
         booksTitles = booksTitles.sort({$0.0 < $0.1})
 
-        //-------Fin delos titulos---//
+        //-------Fin delos titulos----------------------------------//
+        
+        
         
         //Ordenamos tagsArray por orden alfabetico 
         tagsArray = tagsArray.sort({$0.0 < $0.1})
@@ -135,20 +122,10 @@ class HackerBooksGroup {
     }
     
     
-        
-    var booksCount : Int{
-        
-        get {
-            
-            return booksTitles.count
-            
-        }
-        
-    }
+ 
 
     
-    // Cantidad de tags
-        
+    //Cantidad de tags
         var tagsCount : Int {
             
             get {
@@ -158,9 +135,12 @@ class HackerBooksGroup {
             
         }
     
-    func booksForSectionOrdered (forSect sect: Int) -> Int{
+    
+    // Cantidad de libros por tag
+    func booksForTagCount(forTags tag: Int) -> Int{
         
-        guard let count = booksGroup[booksTitles[sect]]?.count else {
+        
+        guard let count = dict[tagsArray[tag]]?.count else {
             
             return 0
             
@@ -169,33 +149,6 @@ class HackerBooksGroup {
         return count
         
     }
-    
-        
-    // Cantidad de libros por tag
-        
-        func booksForTagCount(forTags tag: Int) -> Int{
-            
-        
-            guard let count = dict[tagsArray[tag]]?.count else {
-                
-                return 0
-                
-            }
-            
-            return count
-            
-        }
-    
-    func bookForTableOrdered (atIndex index:Int, forSect sect: Int) -> HackerBook{
-        
-        let books = booksGroup[booksTitles[sect]]
-        
-        let book = books![index]
-        
-        return book
-        
-    }
- 
     
     // identificamos libro por tag
     func bookForTable (atIndex index: Int, forTag tag: Int ) -> HackerBook{
@@ -208,19 +161,7 @@ class HackerBooksGroup {
         let book = books![index]
         
         return book
-            
-            
-            //Podemos intentar recibir el contenido de favoritos desde el controlador a una funcion aqui 
-            //que tambien la llamamos desde aqui para que devuelva el contenido
-            
-       
-
-    }
-    
-    
-    func getTitles (forSection section: Int)-> String{
         
-        return booksTitles[section]
         
     }
     
@@ -230,10 +171,60 @@ class HackerBooksGroup {
         return tagsArray[section]
         
         
-        }
-    
-    
     }
+    
+
+    //-------------------Para la tabla de titulos-----------//
+    
+    //Cantidad de libros
+    var booksCount : Int{
+        
+        get {
+            
+            return booksTitles.count
+            
+        }
+        
+    }
+    
+    //Cantidad de libros por seccion
+    func booksForSectionOrdered (forSect sect: Int) -> Int{
+        
+        guard let count = booksGroup[booksTitles[sect]]?.count else {
+            
+            return 0
+            
+        }
+        
+        return count
+        
+    }
+
+
+    
+    //Identificamos el libro
+    func bookForTableOrdered (atIndex index:Int, forSect sect: Int)   -> HackerBook{
+        
+        let books = booksGroup[booksTitles[sect]]
+            
+        let book = books![index]
+        
+        return book
+            
+            
+    }
+ 
+    
+
+    //Nombres de las secciones de titulo
+    func getTitles (forSection section: Int)-> String{
+        
+        return booksTitles[section]
+        
+    }
+    
+     //-------------------Fin tabla de titulos-----------//
+}
 
 
 

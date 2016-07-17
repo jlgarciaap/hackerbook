@@ -33,7 +33,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             if(NSFileManager.defaultManager().fileExistsAtPath(fileSavedPath) == false){
                 let data = NSData(contentsOfURL: url)!
                 
-                print("no tenemos datos")
                 
                 let documentsPath = NSURL(fileURLWithPath: documents).URLByAppendingPathComponent("hackerBooksData.json")
                 data.writeToURL(documentsPath, atomically: false)
@@ -76,21 +75,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         //let vc = HackerBookControllerViewController(model: model)
         
-        let vc = HackerBooksTableTableViewController(model: model)
+        let vc = HackerBooksTableViewController(model: model)
         
         let navTable = UINavigationController(rootViewController: vc)
             
-            let book : HackerBook
-            
-            
+        let book : HackerBook
                 
-                book = model.bookForTable(atIndex: 0, forTag: 1)
+        book = model.bookForTable(atIndex: 0, forTag: 1)
                 
           
                 
             
         //Creamos el elemento que se muestra por defecto cuando estamos en SPlit
-            let bookVC = HackerBookControllerViewController(model: book)
+            let bookVC = HackerBookViewController(model: book)
             
         //Asignamos el delegado. Es decir le indicamos al HackerBooksTableTableViewController quien es su delegado
             

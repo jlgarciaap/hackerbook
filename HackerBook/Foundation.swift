@@ -4,7 +4,7 @@ import Foundation
 
 extension NSBundle{
     
-    //Deberia confirmar que tenemos cosas dentro de cada opcional
+    
     func URLForResource(name: String?) -> NSURL?{
 
     let components = name?.componentsSeparatedByString(".")

@@ -11,7 +11,7 @@ import Foundation
 enum HackerBooksErrors: ErrorType {
     
    
-    case JSONParsingError, imageJSONError, pdfJSONError
+    case JSONParsingError, imageJSONError, pdfJSONError, imageSaveRecoverFailed, bookIdentificationError
    
     
 }

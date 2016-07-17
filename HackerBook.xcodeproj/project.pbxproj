@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		F443CDE41D3B873C0048C514 /* HackerBooksCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F443CDE21D3B873C0048C514 /* HackerBooksCellView.swift */; };
 		F443CDE51D3B873C0048C514 /* HackerBooksCellView.xib in Resources */ = {isa = PBXBuildFile; fileRef = F443CDE31D3B873C0048C514 /* HackerBooksCellView.xib */; };
-		F443CDE71D3B9C9E0048C514 /* utilsFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F443CDE61D3B9C9E0048C514 /* utilsFunctions.swift */; };
 		F47E8B9C1D32B15500F69305 /* HackerPdfViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F47E8B9A1D32B15500F69305 /* HackerPdfViewController.swift */; };
 		F47E8B9D1D32B15500F69305 /* HackerPdfViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F47E8B9B1D32B15500F69305 /* HackerPdfViewController.xib */; };
 		F49C7C9F1D300F7A008C275D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49C7C9E1D300F7A008C275D /* AppDelegate.swift */; };
@@ -19,17 +18,16 @@
 		F49C7CB61D30128E008C275D /* books_readable.json in Resources */ = {isa = PBXBuildFile; fileRef = F49C7CB51D30128E008C275D /* books_readable.json */; };
 		F49C7CB81D3014AF008C275D /* Errors.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49C7CB71D3014AF008C275D /* Errors.swift */; };
 		F49C7CBA1D3014BF008C275D /* JSONparsing.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49C7CB91D3014BF008C275D /* JSONparsing.swift */; };
-		F49C7CBF1D301FC9008C275D /* HackerBookControllerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49C7CBD1D301FC9008C275D /* HackerBookControllerViewController.swift */; };
-		F49C7CC01D301FC9008C275D /* HackerBookControllerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F49C7CBE1D301FC9008C275D /* HackerBookControllerViewController.xib */; };
+		F49C7CBF1D301FC9008C275D /* HackerBookViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49C7CBD1D301FC9008C275D /* HackerBookViewController.swift */; };
+		F49C7CC01D301FC9008C275D /* HackerBookViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F49C7CBE1D301FC9008C275D /* HackerBookViewController.xib */; };
 		F4A8AF401D30FB7500D53FB0 /* HackerBooksGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A8AF3F1D30FB7500D53FB0 /* HackerBooksGroup.swift */; };
-		F4A8AF421D310C0100D53FB0 /* HackerBooksTableTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A8AF411D310C0100D53FB0 /* HackerBooksTableTableViewController.swift */; };
+		F4A8AF421D310C0100D53FB0 /* HackerBooksTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A8AF411D310C0100D53FB0 /* HackerBooksTableViewController.swift */; };
 		F4A8AF451D3163FE00D53FB0 /* Foundation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A8AF441D3163FE00D53FB0 /* Foundation.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		F443CDE21D3B873C0048C514 /* HackerBooksCellView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HackerBooksCellView.swift; sourceTree = "<group>"; };
 		F443CDE31D3B873C0048C514 /* HackerBooksCellView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HackerBooksCellView.xib; sourceTree = "<group>"; };
-		F443CDE61D3B9C9E0048C514 /* utilsFunctions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = utilsFunctions.swift; sourceTree = "<group>"; };
 		F47E8B9A1D32B15500F69305 /* HackerPdfViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HackerPdfViewController.swift; sourceTree = "<group>"; };
 		F47E8B9B1D32B15500F69305 /* HackerPdfViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HackerPdfViewController.xib; sourceTree = "<group>"; };
 		F49C7C9B1D300F7A008C275D /* HackerBook.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HackerBook.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -41,10 +39,10 @@
 		F49C7CB51D30128E008C275D /* books_readable.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = books_readable.json; sourceTree = "<group>"; };
 		F49C7CB71D3014AF008C275D /* Errors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Errors.swift; sourceTree = "<group>"; };
 		F49C7CB91D3014BF008C275D /* JSONparsing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONparsing.swift; sourceTree = "<group>"; };
-		F49C7CBD1D301FC9008C275D /* HackerBookControllerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HackerBookControllerViewController.swift; sourceTree = "<group>"; };
-		F49C7CBE1D301FC9008C275D /* HackerBookControllerViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HackerBookControllerViewController.xib; sourceTree = "<group>"; };
+		F49C7CBD1D301FC9008C275D /* HackerBookViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HackerBookViewController.swift; sourceTree = "<group>"; };
+		F49C7CBE1D301FC9008C275D /* HackerBookViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HackerBookViewController.xib; sourceTree = "<group>"; };
 		F4A8AF3F1D30FB7500D53FB0 /* HackerBooksGroup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HackerBooksGroup.swift; sourceTree = "<group>"; };
-		F4A8AF411D310C0100D53FB0 /* HackerBooksTableTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HackerBooksTableTableViewController.swift; sourceTree = "<group>"; };
+		F4A8AF411D310C0100D53FB0 /* HackerBooksTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HackerBooksTableViewController.swift; sourceTree = "<group>"; };
 		F4A8AF441D3163FE00D53FB0 /* Foundation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Foundation.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -114,12 +112,11 @@
 		F49C7CB11D3011C5008C275D /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				F49C7CBD1D301FC9008C275D /* HackerBookControllerViewController.swift */,
-				F49C7CBE1D301FC9008C275D /* HackerBookControllerViewController.xib */,
-				F4A8AF411D310C0100D53FB0 /* HackerBooksTableTableViewController.swift */,
+				F49C7CBD1D301FC9008C275D /* HackerBookViewController.swift */,
+				F49C7CBE1D301FC9008C275D /* HackerBookViewController.xib */,
+				F4A8AF411D310C0100D53FB0 /* HackerBooksTableViewController.swift */,
 				F47E8B9A1D32B15500F69305 /* HackerPdfViewController.swift */,
 				F47E8B9B1D32B15500F69305 /* HackerPdfViewController.xib */,
-				F443CDE61D3B9C9E0048C514 /* utilsFunctions.swift */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -202,7 +199,7 @@
 				F47E8B9D1D32B15500F69305 /* HackerPdfViewController.xib in Resources */,
 				F49C7CA61D300F7A008C275D /* Assets.xcassets in Resources */,
 				F49C7CB61D30128E008C275D /* books_readable.json in Resources */,
-				F49C7CC01D301FC9008C275D /* HackerBookControllerViewController.xib in Resources */,
+				F49C7CC01D301FC9008C275D /* HackerBookViewController.xib in Resources */,
 				F443CDE51D3B873C0048C514 /* HackerBooksCellView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -214,13 +211,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F443CDE71D3B9C9E0048C514 /* utilsFunctions.swift in Sources */,
-				F49C7CBF1D301FC9008C275D /* HackerBookControllerViewController.swift in Sources */,
+				F49C7CBF1D301FC9008C275D /* HackerBookViewController.swift in Sources */,
 				F49C7CB41D3011F1008C275D /* HackerBook.swift in Sources */,
 				F4A8AF451D3163FE00D53FB0 /* Foundation.swift in Sources */,
 				F4A8AF401D30FB7500D53FB0 /* HackerBooksGroup.swift in Sources */,
 				F49C7CB81D3014AF008C275D /* Errors.swift in Sources */,
-				F4A8AF421D310C0100D53FB0 /* HackerBooksTableTableViewController.swift in Sources */,
+				F4A8AF421D310C0100D53FB0 /* HackerBooksTableViewController.swift in Sources */,
 				F49C7CBA1D3014BF008C275D /* JSONparsing.swift in Sources */,
 				F49C7C9F1D300F7A008C275D /* AppDelegate.swift in Sources */,
 				F47E8B9C1D32B15500F69305 /* HackerPdfViewController.swift in Sources */,

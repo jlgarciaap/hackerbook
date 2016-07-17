@@ -8,7 +8,9 @@
 
 import UIKit
 
-class HackerBookControllerViewController: UIViewController {
+
+
+class HackerBookViewController: UIViewController {
     
     //MARK: - Properties
     
@@ -24,7 +26,8 @@ class HackerBookControllerViewController: UIViewController {
     
     @IBOutlet weak var tagsTitle: UILabel!
     
-   
+    let keyFavsSaved = "favsSaved"
+    let keyFavorites = "favorites"
     
 
     var model: HackerBook
@@ -33,7 +36,7 @@ class HackerBookControllerViewController: UIViewController {
         
         self.model = model
         
-        super.init(nibName:"HackerBookControllerViewController", bundle: nil)
+        super.init(nibName:"HackerBookViewController", bundle: nil)
         
     }
     
@@ -68,21 +71,24 @@ class HackerBookControllerViewController: UIViewController {
         
             let defaults = NSUserDefaults.standardUserDefaults()
         
-            let favsSaved = defaults.dictionaryForKey("favsSaved")
+            //Comprobamos los favoritos guardados
+            let favsSaved = defaults.dictionaryForKey(keyFavsSaved)
         
-            let bookFavsTitle = favsSaved?["favorites"] as? [String]
+            let bookFavsTitle = favsSaved?[keyFavorites] as? [String]
         
             if(bookFavsTitle?.contains(model.title!) == true){
                 
-                //Controlamos para que no nos repita en la vista el favorites tag cada vez que pulsemos
-                if((model.tags?.containsString("favorites")) == false){
+                //Controlamos para que no nos repita en la vista el favorites 
+                //tag cada vez que pulsemos
                 
-                model.tags = model.tags! + ", favorites"
+                if((model.tags?.containsString(keyFavorites)) == false){
+                
+                model.tags = model.tags! + ", \(keyFavorites)"
             
                 }
             }
         
-            if((model.tags?.containsString("favorites")) == true){
+            if((model.tags?.containsString(keyFavorites)) == true){
                 
                 
                 favSwitch.on = true
@@ -112,7 +118,7 @@ class HackerBookControllerViewController: UIViewController {
         
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
+       
     }
 
     override func didReceiveMemoryWarning() {
@@ -122,22 +128,19 @@ class HackerBookControllerViewController: UIViewController {
     
     
     func stateChanged(switchState: UISwitch){
+       
+        //Mandamos notificacion cuando se marca o desmarca un elemento de favoritos
+        //la recibimos en hackerBooksTableViewController
         
         let nCenter = NSNotificationCenter.defaultCenter()
         
         if switchState.on{
             
-            
-            
             let notif = NSNotification(name: "favChangedOn", object: self, userInfo: ["key": model])
             
             nCenter.postNotification(notif)
             
-            model.tags = model.tags! + ", favorites"
-            
-            syncModelWithView()
-            
-            
+            model.tags = model.tags! + ", \(keyFavorites)"
             
         } else {
             
@@ -145,11 +148,12 @@ class HackerBookControllerViewController: UIViewController {
             
             nCenter.postNotification(notif)
             
-            model.tags = model.tags?.stringByReplacingOccurrencesOfString(", favorites", withString: "")
-            syncModelWithView()
+            model.tags = model.tags?.stringByReplacingOccurrencesOfString(", \(keyFavorites)", withString: "")
+            
         }
         
-        
+        syncModelWithView()
+
         
     }
     
@@ -158,9 +162,9 @@ class HackerBookControllerViewController: UIViewController {
 
 //MARK: - Delegate Subscription
 
-extension HackerBookControllerViewController : HackerBooksControllerDelegate {
+extension HackerBookViewController : HackerBooksControllerDelegate {
     
-    func hackerBooksViewController(vc: HackerBooksTableTableViewController, didSelectBook book: HackerBook) {
+    func hackerBooksViewController(vc: HackerBooksTableViewController, didSelectBook book: HackerBook) {
         //Le indicamos que el modelo ahora es lo que le pasamos por paramtro
         model = book
         
@@ -174,7 +178,6 @@ extension HackerBookControllerViewController : HackerBooksControllerDelegate {
  
 }
 
-//MARK: - Protocols
 
 
 

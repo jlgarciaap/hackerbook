@@ -20,6 +20,8 @@ class HackerPdfViewController: UIViewController, UIWebViewDelegate {
     
     @IBOutlet weak var actView: UIActivityIndicatorView!
     
+    
+    //MARK: - Init
     init(model: HackerBook){
         
         self.model = model
