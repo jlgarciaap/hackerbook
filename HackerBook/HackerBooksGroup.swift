@@ -24,10 +24,14 @@ class HackerBooksGroup {
     
     typealias tagString = String
     
+    typealias titleString = String
+    
     
     
     //NOs ayuda a separar los libros por tags
     typealias hackerBookswithTags = [ tagString : hackerBooksArray]
+    
+    typealias booksGroupsTitles = [titleString : hackerBooksArray]
     
     //MARK: - Properties
     
@@ -35,7 +39,8 @@ class HackerBooksGroup {
     var tagsArray : [String] = [] //Almacenamos los tags existentes
     var tagsGroup : [String] = [] // Almacenamos los tags del libro en cuestion
     var favorites = ["Favorites" : hackerBooksArray()]
-    
+    var booksGroup : booksGroupsTitles = booksGroupsTitles()
+    var booksTitles : [String] = []//Almacenamos los titulos de los libros
     
     //MARK: - Util
     let defaults = NSUserDefaults.standardUserDefaults()
@@ -51,8 +56,23 @@ class HackerBooksGroup {
         let booksSavedFavs = favsSaved?["favorites"] as? [String]
         
         for book in books{
+        
+            if booksGroup.count == 0 {
+                
+                booksGroup = [book.title! : hackerBooksArray()]
+                
+            }
             
+            //--------Para los titutlos----//
+            if booksTitles.contains(book.title!) == false{
+                booksTitles.append(book.title!)
+                
+                booksGroup[book.title!] = [book]
+                
+            }
+
             
+            //-----fin de los titutos---
             
             tagsGroup = book.tags!.componentsSeparatedByString(", ")
         
@@ -61,11 +81,8 @@ class HackerBooksGroup {
                 //tagsArray.append("favorites")
                 tagsGroup.append("favorites")
                 
-                
             }
 
-    
-            
             for tag in (tagsGroup) {
 
                 
@@ -95,6 +112,14 @@ class HackerBooksGroup {
             
         }
         
+        //------Para los titulos---//
+        
+        
+        
+        booksTitles = booksTitles.sort({$0.0 < $0.1})
+
+        //-------Fin delos titulos---//
+        
         //Ordenamos tagsArray por orden alfabetico 
         tagsArray = tagsArray.sort({$0.0 < $0.1})
        
@@ -107,9 +132,21 @@ class HackerBooksGroup {
         }
         
         
+    }
+    
+    
+        
+    var booksCount : Int{
+        
+        get {
+            
+            return booksTitles.count
+            
+        }
         
     }
-        
+
+    
     // Cantidad de tags
         
         var tagsCount : Int {
@@ -120,7 +157,19 @@ class HackerBooksGroup {
             }
             
         }
+    
+    func booksForSectionOrdered (forSect sect: Int) -> Int{
         
+        guard let count = booksGroup[booksTitles[sect]]?.count else {
+            
+            return 0
+            
+        }
+        
+        return count
+        
+    }
+    
         
     // Cantidad de libros por tag
         
@@ -137,6 +186,15 @@ class HackerBooksGroup {
             
         }
     
+    func bookForTableOrdered (atIndex index:Int, forSect sect: Int) -> HackerBook{
+        
+        let books = booksGroup[booksTitles[sect]]
+        
+        let book = books![index]
+        
+        return book
+        
+    }
  
     
     // identificamos libro por tag
@@ -157,6 +215,13 @@ class HackerBooksGroup {
             
        
 
+    }
+    
+    
+    func getTitles (forSection section: Int)-> String{
+        
+        return booksTitles[section]
+        
     }
     
     //Devolvemos el nombre del tag por la seccion que nos pasan

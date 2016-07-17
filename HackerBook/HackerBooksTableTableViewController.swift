@@ -14,15 +14,20 @@ class HackerBooksTableTableViewController: UITableViewController {
     //MARK: - Properties
     let model : HackerBooksGroup
     
+    
     //Delegado
     var delegate : HackerBooksControllerDelegate?
     
+    //Segmented Control
+    var orderSelect : UISegmentedControl
     
     //MARK: - Initialization
     
     init(model : HackerBooksGroup){
         
         self.model = model
+        self.orderSelect = UISegmentedControl(items: ["Tags", "Title"])
+        
         super.init(nibName: nil, bundle: nil)
         
         
@@ -37,9 +42,7 @@ class HackerBooksTableTableViewController: UITableViewController {
     //MARK: Table View Data Source
     
     override func viewWillAppear(animated: Bool) {
-        
-        //let defaults = NSUserDefaults.standardUserDefaults()
-        //defaults.removeObjectForKey("favsSaved")
+        super.viewWillAppear(true)
         
         let nCenter = NSNotificationCenter.defaultCenter()
         
@@ -49,7 +52,8 @@ class HackerBooksTableTableViewController: UITableViewController {
         nCenter.addObserver(self, selector: #selector(bookDelFav), name: "favChangedOff", object: nil)
 
         
-        super.viewWillAppear(true)
+       self.tableView.registerNib(UINib(nibName:"HackerBooksCellView", bundle: nil), forCellReuseIdentifier: "HackerBooksCellView")
+        
         
         
     }
@@ -63,12 +67,12 @@ class HackerBooksTableTableViewController: UITableViewController {
       
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem()
+        
+        self.orderSelect.selectedSegmentIndex = 1
+        
+        self.navigationItem.titleView = self.orderSelect
+        self.orderSelect.addTarget(self, action: #selector(reloadTable), forControlEvents: .ValueChanged)
+        
     }
 
     override func didReceiveMemoryWarning() {
@@ -84,7 +88,6 @@ class HackerBooksTableTableViewController: UITableViewController {
         //Averiguamos el libro
         let bookSelect = book(forIndexPath: indexPath)
         
-       // print(UIDevice.currentDevice().userInterfaceIdiom.rawValue)
         
         //raw value 0 iphone n raw value 1 ipad
         
@@ -112,10 +115,14 @@ class HackerBooksTableTableViewController: UITableViewController {
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
-     
         
-             return model.tagsArray.count
-     
+        if( self.orderSelect.selectedSegmentIndex == 0){
+        
+         return model.tagsArray.count
+        }
+        
+        return model.booksTitles.count
+        
         
         
     }
@@ -125,44 +132,80 @@ class HackerBooksTableTableViewController: UITableViewController {
         //Numero de filas por seccion.
         //Es decir cuantos elementos por tag
         
+        if (self.orderSelect.selectedSegmentIndex == 0){
         return model.booksForTagCount(forTags: section)
+        }
         
+        return model.booksForSectionOrdered(forSect: section)
         
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
-        let cellId = "HackerBookCellID"
+        let cellId = "HackerBooksCellView"
         
         let book : HackerBook
         
+        if(self.orderSelect.selectedSegmentIndex == 0){
         
         book = model.bookForTable(atIndex: indexPath.row, forTag: indexPath.section)
+        } else {
         
+        book = model.bookForTableOrdered(atIndex: indexPath.row, forSect: indexPath.section)
+        
+        }
      
-        var cell = tableView.dequeueReusableCellWithIdentifier(cellId)
+        let cell : HackerBooksCellView = tableView.dequeueReusableCellWithIdentifier(cellId) as! HackerBooksCellView
         
-        if cell == nil {
+        cell.authorsLabel.text = book.authors
+        cell.ImageView?.image = book.image
+        cell.titleLabel.text = book.title
+        cell.titleLabel.textColor = UIColor.whiteColor()
+        cell.titleLabel.backgroundColor = UIColor.lightGrayColor()
+        
+        return cell
+        
+    }
+    
+    
+    //Color y fondo del header
+    override func tableView(tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+        
+        let header : UITableViewHeaderFooterView = view as! UITableViewHeaderFooterView
+        
+        header.contentView.backgroundColor = UIColor.blueColor()
+        header.textLabel?.textColor = UIColor.whiteColor()
+        
+    
+    }
+   
+
+    
+    override func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        
+        if (self.orderSelect.selectedSegmentIndex == 1){
             
-            cell = UITableViewCell(style: .Subtitle, reuseIdentifier: cellId)
-            
-            
+            return 0
         }
         
-        cell?.imageView?.image = book.image
-        cell?.textLabel?.text = book.title
-        cell?.detailTextLabel?.text = book.authors
+        return 40.0
         
+    }
+    
+    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         
-        return cell! // Como hemos puesto el if cell podemos forzar la apertura
-        
+        return 172.0
     }
     
     override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         
+        if self.orderSelect.selectedSegmentIndex == 0 {
+        
         return model.getTags(forSection: section)
         
+        }
         
+        return model.getTitles(forSection: section)
     }
     
     
@@ -171,10 +214,15 @@ class HackerBooksTableTableViewController: UITableViewController {
     
     func book(forIndexPath indexPath: NSIndexPath) -> HackerBook {
         
+        if self.orderSelect.selectedSegmentIndex == 0 {
         
         return model.bookForTable(atIndex: indexPath.row, forTag: indexPath.section)
-        
+        }
+       
+        return model.bookForTableOrdered(atIndex: indexPath.row, forSect: indexPath.section)
     }
+    
+    
     
 }
 
@@ -193,6 +241,22 @@ protocol HackerBooksControllerDelegate {
 
 
 //MARK: - Extensions
+
+extension HackerBooksTableTableViewController {
+    
+    func reloadTable(){
+        
+        self.orderSelect.selectedSegmentIndex != self.orderSelect.selectedSegmentIndex
+        
+        
+        
+        self.tableView.reloadData()
+        
+        
+    }
+    
+    
+}
 
 extension HackerBooksTableTableViewController {
  //Pertenece al comportamiento del switch de favoritos
