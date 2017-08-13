@@ -8,10 +8,10 @@
 
 import Foundation
 
-enum HackerBooksErrors: ErrorType {
+enum HackerBooksErrors: Error {
     
    
-    case JSONParsingError, imageJSONError, pdfJSONError, imageSaveRecoverFailed, bookIdentificationError
+    case jsonParsingError, imageJSONError, pdfJSONError, imageSaveRecoverFailed, bookIdentificationError
    
     
 }

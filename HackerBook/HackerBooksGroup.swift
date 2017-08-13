@@ -45,8 +45,8 @@ class HackerBooksGroup {
     init(hbooks books: hackerBooksArray){
         
          dict = favorites
-        let defaults = NSUserDefaults.standardUserDefaults()
-        let favsSaved = defaults.dictionaryForKey("favsSaved")
+        let defaults = UserDefaults.standard
+        let favsSaved = defaults.dictionary(forKey: "favsSaved")
         let booksSavedFavs = favsSaved?["favorites"] as? [String]
         
         for book in books{
@@ -67,7 +67,7 @@ class HackerBooksGroup {
             }
             //-----fin de los titutos-------//
             
-            tagsGroup = book.tags!.componentsSeparatedByString(", ")
+            tagsGroup = book.tags!.components(separatedBy: ", ")
         
             if(booksSavedFavs?.contains(book.title!) == true){
                 
@@ -84,14 +84,14 @@ class HackerBooksGroup {
                     
                 }
             
-                if !tagsArray.contains(tag.capitalizedString){
+                if !tagsArray.contains(tag.capitalized){
                     
-                    tagsArray.append(tag.capitalizedString)
-                    dict[tag.capitalizedString] = [book]
+                    tagsArray.append(tag.capitalized)
+                    dict[tag.capitalized] = [book]
                     
                 } else {
                     
-                    dict[tag.capitalizedString]?.append(book)
+                    dict[tag.capitalized]?.append(book)
                   
         
                 }
@@ -101,20 +101,20 @@ class HackerBooksGroup {
         //-----------------Para los titulos--------------------------//
             //Ordenamos los titulos para la tabla
         
-        booksTitles = booksTitles.sort({$0.0 < $0.1})
+        booksTitles = booksTitles.sorted(by: {$0.0 < $0.1})
 
         //-------Fin delos titulos----------------------------------//
         
         
         
         //Ordenamos tagsArray por orden alfabetico 
-        tagsArray = tagsArray.sort({$0.0 < $0.1})
+        tagsArray = tagsArray.sorted(by: {$0.0 < $0.1})
        
         
-        if let position = tagsArray.indexOf("Favorites"){
+        if let position = tagsArray.index(of: "Favorites"){
             
-            tagsArray.removeAtIndex(position)
-            tagsArray.insert("Favorites", atIndex: 0)
+            tagsArray.remove(at: position)
+            tagsArray.insert("Favorites", at: 0)
             
         }
         

@@ -14,33 +14,33 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
 
-    func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
      
         
         do{
             
-            let documents = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0]
+            let documents = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
             
-            let fileSavedPath = documents.stringByAppendingString("/hackerBooksData.json")
+            let fileSavedPath = documents + "/hackerBooksData.json"
             
-            guard let url = NSURL(string: "https://t.co/K9ziV0z3SJ") else {
+            guard let url = URL(string: "https://t.co/K9ziV0z3SJ") else {
                 
-                throw HackerBooksErrors.JSONParsingError
+                throw HackerBooksErrors.jsonParsingError
                 
             }
             
             
-            if(NSFileManager.defaultManager().fileExistsAtPath(fileSavedPath) == false){
-                let data = NSData(contentsOfURL: url)!
+            if(FileManager.default.fileExists(atPath: fileSavedPath) == false){
+                let data = try! Data(contentsOf: url)
                 
                 
-                let documentsPath = NSURL(fileURLWithPath: documents).URLByAppendingPathComponent("hackerBooksData.json")
-                data.writeToURL(documentsPath, atomically: false)
+                let documentsPath = URL(fileURLWithPath: documents).appendingPathComponent("hackerBooksData.json")
+                try? data.write(to: documentsPath, options: [])
             }
             
             
-            let documentPath = NSURL(fileURLWithPath: documents).URLByAppendingPathComponent("hackerBooksData.json")
-            let data = NSData(contentsOfURL: documentPath)
+            let documentPath = URL(fileURLWithPath: documents).appendingPathComponent("hackerBooksData.json")
+            let data = try? Data(contentsOf: documentPath)
             
         
         let jsonFile = try loadFromSaveFile(file: data!)
@@ -71,7 +71,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
        // let vc = HackerPdfViewController(model: hBook)
             
-        window = UIWindow(frame: UIScreen.mainScreen().bounds)
+        window = UIWindow(frame: UIScreen.main.bounds)
         
         //let vc = HackerBookControllerViewController(model: model)
         
@@ -91,7 +91,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             
         //Asignamos el delegado. Es decir le indicamos al HackerBooksTableTableViewController quien es su delegado
             
-            if UIDevice.currentDevice().userInterfaceIdiom.rawValue == 1{
+            if UIDevice.current.userInterfaceIdiom.rawValue == 1{
             //Si es un IPAD el delegado es HackerBookCOntroller
                 vc.delegate = bookVC
             }
@@ -105,7 +105,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let splitVC = UISplitViewController()
         splitVC.viewControllers = [navTable, navBook]
             
-        window = UIWindow(frame: UIScreen.mainScreen().bounds)
+        window = UIWindow(frame: UIScreen.main.bounds)
         
         window?.rootViewController = splitVC
         
@@ -121,25 +121,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
     }
 
-    func applicationWillResignActive(application: UIApplication) {
+    func applicationWillResignActive(_ application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
         // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
     }
 
-    func applicationDidEnterBackground(application: UIApplication) {
+    func applicationDidEnterBackground(_ application: UIApplication) {
         // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
         // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
     }
 
-    func applicationWillEnterForeground(application: UIApplication) {
+    func applicationWillEnterForeground(_ application: UIApplication) {
         // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
     }
 
-    func applicationDidBecomeActive(application: UIApplication) {
+    func applicationDidBecomeActive(_ application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
     }
 
-    func applicationWillTerminate(application: UIApplication) {
+    func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
 

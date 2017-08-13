@@ -43,7 +43,8 @@ class HackerPdfViewController: UIViewController, UIWebViewDelegate {
         
         actView.startAnimating()
         
-        pdfView.loadData(obtainNSData(StringUrl: model.pdfUrl!) , MIMEType: "application/pdf", textEncodingName: "utf-8", baseURL: NSURL())
+        
+        pdfView.load(obtainNSData(StringUrl: model.pdfUrl!) , mimeType: "application/pdf", textEncodingName: "utf-8", baseURL: (URL(string: model.pdfUrl!))!)
         
         
     }
@@ -52,7 +53,7 @@ class HackerPdfViewController: UIViewController, UIWebViewDelegate {
     override func viewDidLoad() {
         
         //Vista por debajo del NavBar
-        self.edgesForExtendedLayout = UIRectEdge.None
+        self.edgesForExtendedLayout = UIRectEdge()
         
         super.viewDidLoad()
 
@@ -65,28 +66,28 @@ class HackerPdfViewController: UIViewController, UIWebViewDelegate {
     }
     
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         
         //Nos suscribimos a la notificacion del controlador de tabla
-        let nCenter = NSNotificationCenter.defaultCenter()
+        let nCenter = NotificationCenter.default
         
-        nCenter.addObserver(self, selector: #selector(bookDidChange), name: "BookChanged", object: nil)
+        nCenter.addObserver(self, selector: #selector(bookDidChange), name: NSNotification.Name(rawValue: "BookChanged"), object: nil)
         
         
         syncModelWithView()
     }
     
-    override func viewWillDisappear(animated: Bool) {
+    override func viewWillDisappear(_ animated: Bool) {
         
         //Nos damos de baja de las notificaciones
-        let nCenter = NSNotificationCenter.defaultCenter()
+        let nCenter = NotificationCenter.default
         
         nCenter.removeObserver(self)
     }
     
     //MARK: - UIViewDelegate
     
-    func webViewDidFinishLoad(webView: UIWebView) {
+    func webViewDidFinishLoad(_ webView: UIWebView) {
         //delegado del webView
         
         actView.stopAnimating()
@@ -97,52 +98,52 @@ class HackerPdfViewController: UIViewController, UIWebViewDelegate {
 
     //MARK: - Utilities
     
-    func obtainNSData(StringUrl urlPdf: String) -> NSData{
+    func obtainNSData(StringUrl urlPdf: String) -> Data{
         
         let stringKey = (model.title! as String) + ".data"
     
         
-        let downloadURL = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)[0]
+        let downloadURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
         
-        let writeDownPath = downloadURL.URLByAppendingPathComponent(stringKey).path!
+        let writeDownPath = downloadURL.appendingPathComponent(stringKey).path
     
         
-        if(NSData(contentsOfFile: writeDownPath) == nil){
+        if((try? Data(contentsOf: URL(fileURLWithPath: writeDownPath))) == nil){
             
             
-        let nsUrlCast = NSURL(string: urlPdf)!
+        let nsUrlCast = URL(string: urlPdf)!
         
-        guard let dataURL : NSData = NSData(contentsOfURL: nsUrlCast) else {
+        guard let dataURL : Data = try? Data(contentsOf: nsUrlCast) else {
             
             //Si por lo que sea la url no contiene datos mostramos una alerta
             
-            let alertController = UIAlertController(title: "Surprise Error jeje", message: "The Dark Side has stolen this book, the Rebel Alliance will retrieve it. The force is with us", preferredStyle: UIAlertControllerStyle.Alert)
+            let alertController = UIAlertController(title: "Surprise Error jeje", message: "The Dark Side has stolen this book, the Rebel Alliance will retrieve it. The force is with us", preferredStyle: UIAlertControllerStyle.alert)
             
-            alertController.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default,handler: nil))
+            alertController.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default,handler: nil))
             
-            self.presentViewController(alertController, animated: true, completion: nil)
+            self.present(alertController, animated: true, completion: nil)
             
-            return NSData()
+            return Data()
             }
             
             
             
-            dataURL.writeToFile(writeDownPath, atomically: true)
+            try? dataURL.write(to: URL(fileURLWithPath: writeDownPath), options: [.atomic])
         
             return dataURL
         }
         
         
-        let dataURL = NSData(contentsOfFile: writeDownPath)
+        let dataURL = try? Data(contentsOf: URL(fileURLWithPath: writeDownPath))
         
         return dataURL!
         
     }
     
-    func bookDidChange(notification: NSNotification){
+    func bookDidChange(_ notification: Notification){
         //Funcion para sacar el contenido de la notificacion
         
-        let data = notification.userInfo!
+        let data = (notification as NSNotification).userInfo!
         
         //Sacamos el libro de la notificacion
         let book = data["key"] as? HackerBook

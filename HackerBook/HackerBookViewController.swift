@@ -46,7 +46,7 @@ class HackerBookViewController: UIViewController {
     
     //MARK: - Actions
     
-    @IBAction func readPDFButton(sender: AnyObject) {
+    @IBAction func readPDFButton(_ sender: AnyObject) {
         
         let readVC = HackerPdfViewController(model: model)
         navigationController?.pushViewController(readVC, animated: true)
@@ -66,13 +66,13 @@ class HackerBookViewController: UIViewController {
         
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-            let defaults = NSUserDefaults.standardUserDefaults()
+            let defaults = UserDefaults.standard
         
             //Comprobamos los favoritos guardados
-            let favsSaved = defaults.dictionaryForKey(keyFavsSaved)
+            let favsSaved = defaults.dictionary(forKey: keyFavsSaved)
         
             let bookFavsTitle = favsSaved?[keyFavorites] as? [String]
         
@@ -81,21 +81,21 @@ class HackerBookViewController: UIViewController {
                 //Controlamos para que no nos repita en la vista el favorites 
                 //tag cada vez que pulsemos
                 
-                if((model.tags?.containsString(keyFavorites)) == false){
+                if((model.tags?.contains(keyFavorites)) == false){
                 
                 model.tags = model.tags! + ", \(keyFavorites)"
             
                 }
             }
         
-            if((model.tags?.containsString(keyFavorites)) == true){
+            if((model.tags?.contains(keyFavorites)) == true){
                 
                 
-                favSwitch.on = true
+                favSwitch.isOn = true
                 
             } else {
                 
-                favSwitch.on = false
+                favSwitch.isOn = false
                 
             }
         
@@ -108,12 +108,12 @@ class HackerBookViewController: UIViewController {
     override func viewDidLoad() {
         
         //Vista por debajo del NavBar
-        self.edgesForExtendedLayout = UIRectEdge.None
+        self.edgesForExtendedLayout = UIRectEdge()
         
         
         
         //Estados del Switch
-        favSwitch.addTarget(self, action: #selector(stateChanged), forControlEvents: UIControlEvents.ValueChanged)
+        favSwitch.addTarget(self, action: #selector(stateChanged), for: UIControlEvents.valueChanged)
         
         
         super.viewDidLoad()
@@ -127,28 +127,28 @@ class HackerBookViewController: UIViewController {
     }
     
     
-    func stateChanged(switchState: UISwitch){
+    func stateChanged(_ switchState: UISwitch){
        
         //Mandamos notificacion cuando se marca o desmarca un elemento de favoritos
         //la recibimos en hackerBooksTableViewController
         
-        let nCenter = NSNotificationCenter.defaultCenter()
+        let nCenter = NotificationCenter.default
         
-        if switchState.on{
+        if switchState.isOn{
             
-            let notif = NSNotification(name: "favChangedOn", object: self, userInfo: ["key": model])
+            let notif = Notification(name: Notification.Name(rawValue: "favChangedOn"), object: self, userInfo: ["key": model])
             
-            nCenter.postNotification(notif)
+            nCenter.post(notif)
             
             model.tags = model.tags! + ", \(keyFavorites)"
             
         } else {
             
-            let notif = NSNotification(name: "favChangedOff", object: self, userInfo: ["key": model])
+            let notif = Notification(name: Notification.Name(rawValue: "favChangedOff"), object: self, userInfo: ["key": model])
             
-            nCenter.postNotification(notif)
+            nCenter.post(notif)
             
-            model.tags = model.tags?.stringByReplacingOccurrencesOfString(", \(keyFavorites)", withString: "")
+            model.tags = model.tags?.replacingOccurrences(of: ", \(keyFavorites)", with: "")
             
         }
         
@@ -164,7 +164,7 @@ class HackerBookViewController: UIViewController {
 
 extension HackerBookViewController : HackerBooksControllerDelegate {
     
-    func hackerBooksViewController(vc: HackerBooksTableViewController, didSelectBook book: HackerBook) {
+    func hackerBooksViewController(_ vc: HackerBooksTableViewController, didSelectBook book: HackerBook) {
         //Le indicamos que el modelo ahora es lo que le pasamos por paramtro
         model = book
         
